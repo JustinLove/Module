@@ -45,11 +45,20 @@ CGD.JS = CGD.JS || {};
   }
 
   requiredFiles = {};
-  function require(file, type) {
+  function require(filename, type) {
+    var file = require.path.concat(filename).join('/');
     if (!requiredFiles[file]) {
       requiredFiles[file] = true;
       include(file, type);
     }
   }
+  require.path = [];
+  
+  require.under = function(path, f) {
+    require.path.push(path);
+    f();
+    require.path.pop();
+  };
+  
   CGD.JS.require = require;
 }());
