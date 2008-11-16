@@ -60,5 +60,14 @@ CGD.JS = CGD.JS || {};
     require.path.pop();
   };
   
+  require.expect = function(path, f) {
+    var p = require.path;
+    if (p[p.length-1] == path) {
+      f();
+    } else {
+      require.under(path, f);
+    }
+  };
+  
   CGD.JS.require = require;
 }());
