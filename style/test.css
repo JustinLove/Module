@@ -1,0 +1,10 @@
+#naked {
+  display: block;
+  float: left;
+}
+
+#debugDiv {
+  width: 90%;
+  height: 200px;
+  overflow: scroll;
+}
