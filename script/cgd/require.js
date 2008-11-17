@@ -44,7 +44,7 @@ CGD.JS = CGD.JS || {};
     }
   }
 
-  requiredFiles = {};
+  var requiredFiles = {};
   function require(filename, type) {
     var file = require.path.concat(filename).join('/');
     if (!requiredFiles[file]) {
