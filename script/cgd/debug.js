@@ -118,7 +118,10 @@ CGD.DEBUG.FILTER.timestamp = function() {
 CGD.DEBUG.FILTER.brackets = function() {
   return {
     process: function(str){
-      if (CGD.ARRAY.describes(str)) {
+      if (str && // null is an object...
+          typeof(str) == 'object' && 
+          'constructor' in str &&
+          str.constructor === Array) {
         var a = new Array(str.length);
         for (var i = 0; i < str.length;i++) {
           a[i] = CGD.DEBUG.FILTER.brackets.process(str[i]);
