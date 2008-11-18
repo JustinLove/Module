@@ -9,8 +9,8 @@ CGD.god = window;
 CGD.JS = CGD.JS || {};
 (function() {
   function findMe(tag, attr, file) {
-    tags = document.getElementsByTagName(tag);
-    r = new RegExp(file + '$');
+    var tags = document.getElementsByTagName(tag);
+    var r = new RegExp(file + '$');
     for (var i = 0;i < tags.length;i++) {
       if (r.exec(tags[i][attr])) {
         return tags[i][attr];
@@ -54,11 +54,11 @@ CGD.JS = CGD.JS || {};
     }
   }
 
-  var requiredFiles = {};
+  require.files = {};
   function require(filename, type) {
     var file = require.path.concat(filename).join('/');
-    if (!requiredFiles[file]) {
-      requiredFiles[file] = true;
+    if (!require.files[file]) {
+      require.files[file] = true;
       include(file, type);
     }
   }
