@@ -8,6 +8,16 @@ CGD.god = window;
 
 CGD.JS = CGD.JS || {};
 (function() {
+  function findMe(tag, attr, file) {
+    tags = document.getElementsByTagName(tag);
+    r = new RegExp(file + '$');
+    for (var i = 0;i < tags.length;i++) {
+      if (r.exec(tags[i][attr])) {
+        return tags[i][attr];
+      }
+    }
+  }
+  
   function addTagToHead(tag, attributes) {
     var element = document.createElement(tag);
     for (var a in attributes) {
@@ -64,6 +74,15 @@ CGD.JS = CGD.JS || {};
     var p = require.path;
     if (p[p.length-1] == path) {
       f();
+    } else {
+      require.under(path, f);
+    }
+  };
+  
+  require.within = function(path, file, f) {
+    var fullPath = findMe('script', 'src', file);
+    if (fullPath) {
+      require.under(fullPath.substr(0, fullPath.length - file.length - 1), f);
     } else {
       require.under(path, f);
     }
