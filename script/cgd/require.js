@@ -15,27 +15,30 @@ CGD.JS = CGD.JS || {};
     }
   }
   
-  function findMe(tag, attr, file) {
-    var tags = document.getElementsByTagName(tag);
-    var r = new RegExp(file + '$');
-    for (var i = 0;i < tags.length;i++) {
-      if (r.exec(tags[i][attr])) {
-        return tags[i][attr];
-      }
+  function require(filename, type) {
+    var file = require.once(require.path.concat(filename).join('/'));
+    if (file) {
+      require.include(file, type);
     }
   }
-  
-  function addTagToHead(tag, attributes) {
-    var element = document.createElement(tag);
-    for (var a in attributes) {
-      if (attributes.hasOwnProperty(a)) {
-        element.setAttribute(a, attributes[a]);
-      }
-    }
-    document.getElementsByTagName('head')[0].appendChild(element);
-  }
+  require.path = [];
+  CGD.JS.require = require;
 
-  function guessFileType(file, type) {
+  require.include = function(file, type) {
+    var inferredType = require.guessFileType(file, type);
+    switch (inferredType) {
+      case 'text/javascript':
+        require.addTagToHead('script', {src: file, type: inferredType, language: 'javascript'});
+        break;
+      case 'text/css':
+        require.addTagToHead('link', {href: file, type: inferredType, rel: 'stylesheet'});
+        break;
+      default:
+        throw "Don't know how to include " + type;
+    }
+  };
+
+  require.guessFileType = function(file, type) {
     if (type) {
       return type;
     } else {
@@ -45,41 +48,32 @@ CGD.JS = CGD.JS || {};
         default: return null;
       }
     }
-  }
+  };
 
-  function include(file, type) {
-    var inferredType = guessFileType(file, type);
-    switch (inferredType) {
-      case 'text/javascript':
-        addTagToHead('script', {src: file, type: inferredType, language: 'javascript'});
-        break;
-      case 'text/css':
-        addTagToHead('link', {href: file, type: inferredType, rel: 'stylesheet'});
-        break;
-      default:
-        throw "Don't know how to include " + type;
+  require.addTagToHead = function(tag, attributes) {
+    var element = document.createElement(tag);
+    for (var a in attributes) {
+      if (attributes.hasOwnProperty(a)) {
+        element.setAttribute(a, attributes[a]);
+      }
     }
-  }
+    document.getElementsByTagName('head')[0].appendChild(element);
+  };
 
+  require.files = {};
+  require.once = function(path) {
+    if (require.files[path]) {
+      return null;
+    } else {
+      return require.files[path] = require.root() + path;
+    }
+  };
+  
   require.roots = [""];
   require.root = function() {
     return require.roots.slice(-1)[0];
   };
 
-  require.path = [];
-  function require(filename, type) {
-    var file = require.once(require.path.concat(filename).join('/'));
-    if (file) {
-      include(require.root() + file, type);
-    }
-  }
-  
-  require.files = {};
-  require.once = function(path) {
-    var p = findMe('script', 'src', path);
-    return p ? null : path;
-  };
-  
   require.under = function(path, f) {
     require.path.push(path);
     f();
@@ -92,13 +86,9 @@ CGD.JS = CGD.JS || {};
     require.roots.pop();
   };
   
-  function pathTo(file) {
-    return file.slice(0,file.lastIndexOf('/'));
-  }
-  
   require.within = function(file, f) {
-    var fullPath = findMe('script', 'src', file);
-    var path = pathTo(file);
+    var path = require.pathTo(file);
+    var fullPath = require.findMe('script', 'src', file);
     if (fullPath) {
       var root = fullPath.slice(0, -file.length);
       require.rooted(root, function() {require.under(path, f);});
@@ -106,8 +96,22 @@ CGD.JS = CGD.JS || {};
       require.under(path, f);
     }
   };
+
+  require.pathTo = function(file) {
+    return file.slice(0,file.lastIndexOf('/'));
+  };
   
-  function alreadyNamed(tag, attr) {
+  require.findMe = function(tag, attr, file) {
+    var tags = document.getElementsByTagName(tag);
+    var r = new RegExp(file + '$');
+    for (var i = 0;i < tags.length;i++) {
+      if (r.exec(tags[i][attr])) {
+        return tags[i][attr];
+      }
+    }
+  };
+
+  require.alreadyNamed = function(tag, attr) {
     var tags = document.getElementsByTagName(tag);
     for (var i = 0;i < tags.length;i++) {
       var path = tags[i][attr];
@@ -115,12 +119,10 @@ CGD.JS = CGD.JS || {};
         require.files[path.substr(require.root().length)] = path;
       }
     }
-  }
+  };
   
-  require.rooted(pathTo(window.location + "") + '/', function() {
-    alreadyNamed('script', 'src');
-    alreadyNamed('link', 'href');
+  require.rooted(require.pathTo(window.location + "") + '/', function() {
+    require.alreadyNamed('script', 'src');
+    require.alreadyNamed('link', 'href');
   });
-  
-  CGD.JS.require = require;
 }());
