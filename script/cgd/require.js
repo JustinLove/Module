@@ -67,19 +67,13 @@ CGD.JS = CGD.JS || {};
     var file = require.once(require.path.concat(filename).join('/'));
     D(file);
     if (file) {
-      include(file, type);
+      include(require.roots.slice(-1)[0] + file, type);
     }
   }
   
-  require.files = {};
   require.once = function(path) {
-    if (!require.files[path]) {
-      require.files[path] = require.roots[require.roots.length-1] + path;
-      return require.files[path];
-    } else {
-      D('skipping ' + path);
-      return null;
-    }
+    var p = findMe('script', 'src', path);
+    return p ? null : path;
   };
   
   require.under = function(path, f) {
@@ -96,11 +90,11 @@ CGD.JS = CGD.JS || {};
   
   require.within = function(file, f) {
     var fullPath = findMe('script', 'src', file);
+    var path = file.split('/').slice(0,-1).join('/');
     if (fullPath) {
-      var path = fullPath.split('/').slice(0,-1).join('/') + '/';
-      require.root(path, f);
+      var root = fullPath.slice(0, -file.length);
+      require.root(root, function() {require.under(path, f);});
     } else {
-      var path = file.split('/').slice(0,-1).join('/');
       require.under(path, f);
     }
   };
