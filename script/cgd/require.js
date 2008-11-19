@@ -8,6 +8,13 @@ CGD.god = window;
 
 CGD.JS = CGD.JS || {};
 (function() {
+
+  function D(args) {
+    if ('DEBUG' in CGD) {
+      CGD.DEBUG.p.apply(CGD.DEBUG, arguments);
+    }
+  }
+  
   function findMe(tag, attr, file) {
     var tags = document.getElementsByTagName(tag);
     var r = new RegExp(file + '$');
