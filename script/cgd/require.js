@@ -61,13 +61,17 @@ CGD.JS = CGD.JS || {};
     }
   }
 
-  require.path = [];
   require.roots = [""];
+  require.root = function() {
+    return require.roots.slice(-1)[0];
+  };
+
+  require.path = [];
   function require(filename, type) {
     var file = require.once(require.path.concat(filename).join('/'));
     D(file);
     if (file) {
-      include(require.roots.slice(-1)[0] + file, type);
+      include(require.root() + file, type);
     }
   }
   
@@ -82,7 +86,7 @@ CGD.JS = CGD.JS || {};
     require.path.pop();
   };
   
-  require.root = function(path, f) {
+  require.rooted = function(path, f) {
     require.roots.push(path);
     f();
     require.roots.pop();
@@ -93,7 +97,7 @@ CGD.JS = CGD.JS || {};
     var path = file.split('/').slice(0,-1).join('/');
     if (fullPath) {
       var root = fullPath.slice(0, -file.length);
-      require.root(root, function() {require.under(path, f);});
+      require.rooted(root, function() {require.under(path, f);});
     } else {
       require.under(path, f);
     }
