@@ -74,6 +74,7 @@ CGD.JS = CGD.JS || {};
     }
   }
   
+  require.files = {};
   require.once = function(path) {
     var p = findMe('script', 'src', path);
     return p ? null : path;
@@ -105,6 +106,21 @@ CGD.JS = CGD.JS || {};
       require.under(path, f);
     }
   };
+  
+  function alreadyNamed(tag, attr) {
+    var tags = document.getElementsByTagName(tag);
+    for (var i = 0;i < tags.length;i++) {
+      var path = tags[i][attr];
+      if (path.indexOf(require.root()) == 0) {
+        require.files[path.substr(require.root().length)] = path;
+      }
+    }
+  }
+  
+  require.rooted(pathTo(window.location + "") + '/', function() {
+    alreadyNamed('script', 'src');
+    alreadyNamed('link', 'href');
+  });
   
   CGD.JS.require = require;
 }());
