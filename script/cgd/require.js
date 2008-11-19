@@ -69,7 +69,6 @@ CGD.JS = CGD.JS || {};
   require.path = [];
   function require(filename, type) {
     var file = require.once(require.path.concat(filename).join('/'));
-    D(file);
     if (file) {
       include(require.root() + file, type);
     }
@@ -92,9 +91,13 @@ CGD.JS = CGD.JS || {};
     require.roots.pop();
   };
   
+  function pathTo(file) {
+    return file.slice(0,file.lastIndexOf('/'));
+  }
+  
   require.within = function(file, f) {
     var fullPath = findMe('script', 'src', file);
-    var path = file.split('/').slice(0,-1).join('/');
+    var path = pathTo(file);
     if (fullPath) {
       var root = fullPath.slice(0, -file.length);
       require.rooted(root, function() {require.under(path, f);});
