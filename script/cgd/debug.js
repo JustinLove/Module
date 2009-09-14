@@ -41,9 +41,14 @@ CGD.DEBUG.BACKEND.widget = {
 // Write to a div when in a browser
 CGD.DEBUG.BACKEND.div_factory = function(id) {
   var style = 'none';
+
+  function debugDiv() {
+    return document.getElementById(id);
+  }
+  
   function setDiv(s) {
     if (style != s) {
-      document.getElementById(id).style.display = s;
+      debugDiv().style.display = s;
       style = s;
     }
   }
@@ -51,16 +56,18 @@ CGD.DEBUG.BACKEND.div_factory = function(id) {
   return {
     p: function (str) {
       setDiv('block');
-      var debugDiv = document.getElementById(id);
-      debugDiv.appendChild(document.createTextNode(str));
-      debugDiv.appendChild(document.createElement("br"));
-      debugDiv.scrollTop = debugDiv.scrollHeight;
+      var div = debugDiv();
+      div.appendChild(document.createTextNode(str));
+      div.appendChild(document.createElement("br"));
+      div.scrollTop = div.scrollHeight;
     },
     disable: function() {
       setDiv('none');
     },
     load: function() {
-      this.preference = 0.5;
+      if (debugDiv()) {
+        this.preference = 0.5;
+      }
     },
     preference: 0.0
   };
