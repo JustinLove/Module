@@ -14,14 +14,14 @@
 test("includes a file", function() {
   expect(1);
   stop(100);
-  CGD.JS.require.include('true.js');
+  CGD.JS.require.include('pass.js');
 });
 
 test("includes a file twice", function() {
   expect(2);
   stop(100);
-  CGD.JS.require.include('true.js');
-  CGD.JS.require.include('true.js');
+  CGD.JS.require.include('pass.js');
+  CGD.JS.require.include('pass.js');
 });
 
 test("detects static script files", function() {
