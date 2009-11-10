@@ -11,35 +11,18 @@
 
   <script>
 
-CGD.test = {};
+test("includes a file", function() {
+  expect(1);
+  stop(100);
+  CGD.JS.require.include('true.js');
+});
 
-CGD.test.require = {
-  "includes a file": function() {
-    CGD.test.a = 0;
-    CGD.JS.require.include('a.js');
-  },
-  "File was included": function() {
-    equals(CGD.test.a, 1);
-  },
-  "includes a file twice": function() {
-    CGD.test.a = 0;
-    CGD.JS.require.include('a.js');
-    CGD.JS.require.include('a.js');
-  },
-  "File was included twice": function() {
-    equals(CGD.test.a, 2);
-  }
-};
-
-(function() {
-  var t = 0;
-  for (var n in CGD.test.require) {
-    (function(name, time) {
-      setTimeout(function() {test(name, CGD.test.require[name]);}, time);
-    })(n, t);
-    t += 100;
-  }
-})();
+test("includes a file twice", function() {
+  expect(2);
+  stop(100);
+  CGD.JS.require.include('true.js');
+  CGD.JS.require.include('true.js');
+});
   </script>
   
 </head>
