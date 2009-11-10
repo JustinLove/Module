@@ -23,6 +23,16 @@ test("includes a file twice", function() {
   CGD.JS.require.include('true.js');
   CGD.JS.require.include('true.js');
 });
+
+test("detects static script files", function() {
+  for (var i in CGD.JS.require.files) {
+    if (CGD.JS.require.files[i].match(/qunit.js/)) {
+      ok(true, 'found static file');
+      return;
+    }
+  }
+  ok(false, 'did not find static file');
+});
   </script>
   
 </head>
