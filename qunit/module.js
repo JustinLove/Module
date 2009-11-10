@@ -1,4 +1,4 @@
-CGD.test = {};
+CGD.test = CGD.test || {};
 CGD.JS.require.within('module.js', function() {
   CGD.JS.require('child.js');
 });

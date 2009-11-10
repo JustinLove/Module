@@ -58,9 +58,11 @@ test("relative path context", function() {
 test("absolute path context", function() {
   expect(1);
   stop();
-  CGD.JS.require.within('subdir/subpass.js', function() {
-    CGD.JS.require('subsubdir/subsubpass.js');
-  });
+  try {
+    CGD.JS.require.within('subdir/subpass.js', function() {
+      CGD.JS.require('subsubdir/subsubpass.js');
+    });
+  } catch (e) {}
   setTimeout(start, 100);
 });
 

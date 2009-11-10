@@ -61,10 +61,12 @@ CGD.JS = CGD.JS || {};
   };
 
   require.files = {};
+  require.queued = 0;
   require.once = function(path) {
     if (require.files[path]) {
       return null;
     } else {
+      require.queued++;
       return require.files[path] = require.root() + path;
     }
   };
@@ -85,20 +87,36 @@ CGD.JS = CGD.JS || {};
     try { f(); }
     finally { require.roots.pop(); }
   };
+
+  require.DependenciesNotYetLoaded = function() {};
+  var dnyl = require.DependenciesNotYetLoaded.prototype;
+  dnyl.name = "DependenciesNotYetLoaded";
+  dnyl.message = "Not all dependencies loaded; file will be retried later.";
+  dnyl.toString = function() {return this.name + ": " + this.message;};
   
   require.within = function(file, f) {
     var path = require.pathTo(file);
     var fullPath = require.findMe('script', 'src', file);
+    var queued = require.queued;
     if (fullPath) {
       var root = fullPath.slice(0, -file.length);
       require.rooted(root, function() {require.under(path, f);});
     } else {
       require.under(path, f);
     }
+    if (require.queued > queued) {
+      require.include(file);
+      throw new require.DependenciesNotYetLoaded;
+    }
   };
 
   require.pathTo = function(file) {
-    return file.slice(0,file.lastIndexOf('/'));
+    var slash = file.lastIndexOf('/');
+    if (slash >= 1) {
+      return file.slice(0,slash);
+    } else {
+      return ".";
+    }
   };
   
   require.findMe = function(tag, attr, file) {
@@ -116,6 +134,7 @@ CGD.JS = CGD.JS || {};
     for (var i = 0;i < tags.length;i++) {
       var path = tags[i][attr];
       if (path.indexOf(require.root()) == 0) {
+        require.queued++;
         require.files[path.substr(require.root().length)] = path;
       }
     }
