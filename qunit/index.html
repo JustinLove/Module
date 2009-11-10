@@ -63,6 +63,13 @@ test("absolute path context", function() {
   });
   setTimeout(start, 100);
 });
+
+test("module can load dependencies before continuing", function() {
+  expect(1);
+  stop();
+  CGD.JS.require('module.js');
+  setTimeout(start, 100);
+});
   </script>
   
 </head>

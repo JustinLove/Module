@@ -1,0 +1,1 @@
+CGD.test.child = 'child';
