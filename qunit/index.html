@@ -64,6 +64,19 @@ test("absolute path context", function() {
   setTimeout(start, 100);
 });
 
+test("exceptions don't corrupt context", function() {
+  expect(1);
+  stop();
+  try {
+    CGD.JS.require.within('subdir/subpass.js', function() {
+      throw "blarg";
+    });
+  }
+  catch (s) {}
+  CGD.JS.require("pass.js");
+  setTimeout(start, 100);
+});
+
 test("module can load dependencies before continuing", function() {
   expect(1);
   stop();

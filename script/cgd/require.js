@@ -76,14 +76,14 @@ CGD.JS = CGD.JS || {};
 
   require.under = function(path, f) {
     require.path.push(path);
-    f();
-    require.path.pop();
+    try { f(); }
+    finally { require.path.pop(); }
   };
   
   require.rooted = function(path, f) {
     require.roots.push(path);
-    f();
-    require.roots.pop();
+    try { f(); }
+    finally { require.roots.pop(); }
   };
   
   require.within = function(file, f) {
