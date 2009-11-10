@@ -45,6 +45,15 @@ test("require includes a file only once", function() {
   CGD.JS.require('fail.js');
   setTimeout(start, 100);
 });
+
+test("require uses path context", function() {
+  expect(1);
+  stop();
+  CGD.JS.require.under('subdir', function() {
+    CGD.JS.require('subpass.js');
+  });
+  setTimeout(start, 100);
+});
   </script>
   
 </head>
