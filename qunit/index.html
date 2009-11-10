@@ -4,6 +4,9 @@
 <head>
   <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen" />
   <link rel="stylesheet" href="../style/test.css" type="text/css" media="screen" />
+
+<script type="text/javascript" src="fail.js"></script>
+
 <script type="text/javascript" src="qunit/qunit.js"></script>
 
 <script type="text/javascript" src="../script/cgd/debug.js"></script>
@@ -13,15 +16,17 @@
 
 test("includes a file", function() {
   expect(1);
-  stop(100);
+  stop();
   CGD.JS.require.include('pass.js');
+  setTimeout(start, 100);
 });
 
 test("includes a file twice", function() {
   expect(2);
-  stop(100);
+  stop();
   CGD.JS.require.include('pass.js');
   CGD.JS.require.include('pass.js');
+  setTimeout(start, 100);
 });
 
 test("detects static script files", function() {
@@ -32,6 +37,13 @@ test("detects static script files", function() {
     }
   }
   ok(false, 'did not find static file');
+});
+
+test("require includes a file only once", function() {
+  expect(0);
+  stop();
+  CGD.JS.require('fail.js');
+  setTimeout(start, 100);
 });
   </script>
   
