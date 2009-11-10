@@ -20,6 +20,14 @@ CGD.test.require = {
   },
   "File was included": function() {
     equals(CGD.test.a, 1);
+  },
+  "includes a file twice": function() {
+    CGD.test.a = 0;
+    CGD.JS.require.include('a.js');
+    CGD.JS.require.include('a.js');
+  },
+  "File was included twice": function() {
+    equals(CGD.test.a, 2);
   }
 };
 
