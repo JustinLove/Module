@@ -46,11 +46,20 @@ test("require includes a file only once", function() {
   setTimeout(start, 100);
 });
 
-test("require uses path context", function() {
+test("relative path context", function() {
   expect(1);
   stop();
   CGD.JS.require.under('subdir', function() {
     CGD.JS.require('subpass.js');
+  });
+  setTimeout(start, 100);
+});
+
+test("absolute path context", function() {
+  expect(1);
+  stop();
+  CGD.JS.require.within('subdir/subpass.js', function() {
+    CGD.JS.require('subsubdir/subsubpass.js');
   });
   setTimeout(start, 100);
 });
