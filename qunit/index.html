@@ -81,6 +81,13 @@ test("module can load dependencies before continuing", function() {
   CGD.JS.require('module.js');
   setTimeout(start, 100);
 });
+
+test("out-of-order mutual dependencies", function() {
+  expect(3);
+  stop();
+  CGD.JS.require('conflict/top.js');
+  setTimeout(start, 100);
+});
   </script>
   
 </head>
