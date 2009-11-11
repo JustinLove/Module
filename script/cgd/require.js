@@ -94,6 +94,15 @@ CGD.JS = CGD.JS || {};
   dnyl.message = "Not all dependencies loaded; file will be retried later.";
   dnyl.toString = function() {return this.name + ": " + this.message;};
   
+  var window_onerror = window.onerror;
+  window.onerror = require.onerror = function(message, url, line)  {
+    if (message.match(dnyl.name)) {
+      return true;
+    } else {
+      return window_onerror(message, url, line);
+    }
+  };
+  
   require.within = function(file, f) {
     var path = require.pathTo(file);
     var fullPath = require.findMe('script', 'src', file);
