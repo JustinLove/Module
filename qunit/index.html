@@ -56,14 +56,10 @@ test("relative path context", function() {
 });
 
 test("absolute path context", function() {
-  expect(1);
-  stop();
-  try {
-    CGD.JS.require.within('subdir/subpass.js', function() {
-      CGD.JS.require('subsubdir/subsubpass.js');
-    });
-  } catch (e) {}
-  setTimeout(start, 100);
+  ok(!CGD.JS.require.path.join('/').match('subdir'), 'subdir not previously in path');
+  CGD.JS.require.within('subdir/subpass.js', function() {
+    ok(CGD.JS.require.path.join('/').match('subdir'), 'subdir now in path');
+  });
 });
 
 test("exceptions don't corrupt context", function() {
