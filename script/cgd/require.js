@@ -50,6 +50,18 @@ CGD.JS = CGD.JS || {};
     }
   };
 
+  require.onload = function() {
+    switch (this.readyState) {
+      case undefined:
+      case 'loaded':
+      case 'complete':
+        require.complete[this.src] = true;
+        require.loaded++;
+        break;
+      default: break;
+    }
+  };
+
   require.addTagToHead = function(tag, attributes) {
     var element = document.createElement(tag);
     for (var a in attributes) {
@@ -57,6 +69,7 @@ CGD.JS = CGD.JS || {};
         element.setAttribute(a, attributes[a]);
       }
     }
+    element.onload = element.onreadystatechange = require.onload;
     document.getElementsByTagName('head')[0].appendChild(element);
   };
 
@@ -138,6 +151,8 @@ CGD.JS = CGD.JS || {};
     }
   };
 
+  require.complete = {};
+  require.loaded = 0;
   require.alreadyNamed = function(tag, attr) {
     var tags = document.getElementsByTagName(tag);
     for (var i = 0;i < tags.length;i++) {
@@ -145,6 +160,8 @@ CGD.JS = CGD.JS || {};
       if (path.indexOf(require.root()) == 0) {
         require.queued++;
         require.files[path.substr(require.root().length)] = path;
+        require.loaded++;
+        require.complete[path] = true;
       }
     }
   };
