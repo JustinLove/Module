@@ -69,6 +69,17 @@ CGD.JS = CGD.JS || {};
       this.path.push(path);
       try { f(this); }
       finally { this.path.pop(); }
+    },
+    require: function(filename, type) {
+      var file = require.once(this.path.concat(filename).join('/'));
+      if (file) {
+        var element = file.element(type);
+        if (!require.files[file.canonicalPath]) {
+          file.register();
+          element.onload = element.onreadystatechange = require.onload;
+          require.addElementToHead(element);
+        }
+      }
     }
   };
 
