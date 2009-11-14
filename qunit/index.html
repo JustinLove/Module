@@ -60,6 +60,14 @@ test("improves canonicalPath", function() {
   ok(file.canonicalPath.match('qunit/el.js'), file.canonicalPath);
 });
 
+test("require avoids aliasing", function() {
+  expect(1);
+  stop();
+  CGD.JS.require('alias.js');
+  CGD.JS.require('subdir/../alias.js');
+  setTimeout(start, 100);
+});
+
 module("require");
 
 test("includes a file", function() {

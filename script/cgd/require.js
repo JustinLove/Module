@@ -50,7 +50,12 @@ CGD.JS = CGD.JS || {};
   function require(filename, type) {
     var file = require.once(require.path.concat(filename).join('/'));
     if (file) {
-      require.include(file, type);
+      var element = file.element(type);
+      if (!require.files[file.canonicalPath]) {
+        file.register();
+        element.onload = element.onreadystatechange = require.onload;
+        require.addElementToHead(element);
+      }
     }
   }
   require.path = [];
@@ -61,7 +66,6 @@ CGD.JS = CGD.JS || {};
       file = new CGD.Dependency(file);
     }
     var element = file.element(type);
-    element.onload = element.onreadystatechange = require.onload;
     require.addElementToHead(element);
   };
 
