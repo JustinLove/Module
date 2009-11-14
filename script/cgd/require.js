@@ -46,8 +46,30 @@ CGD.JS = CGD.JS || {};
     }
   };
 
-  CGD.Module = function(path, f) {
-    f(this);
+  CGD.Module = function(file, f) {
+    var path = require.pathTo(file);
+    var fullPath = require.findMe('script', 'src', file);
+    var queued = require.queued;
+    var m = this;
+    if (fullPath) {
+      var root = fullPath.slice(0, -file.length);
+      require.rooted(root, function() {m.under(path, f);});
+    } else {
+      m.under(path, f);
+    }
+    if (require.queued > queued) {
+      require.include(file);
+      throw new require.DependenciesNotYetLoaded;
+    }
+  };
+  
+  CGD.Module.prototype = {
+    constructor: CGD.Module,
+    under: function(path, f) {
+      this.path.push(path);
+      try { f(this); }
+      finally { this.path.pop(); }
+    }
   };
 
   function require(filename, type) {
@@ -61,7 +83,7 @@ CGD.JS = CGD.JS || {};
       }
     }
   }
-  require.path = [];
+  CGD.Module.prototype.path = require.path = [];
   CGD.JS.require = require;
 
   require.include = function(file, type) {
