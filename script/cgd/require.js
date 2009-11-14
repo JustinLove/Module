@@ -64,6 +64,7 @@ CGD.JS = CGD.JS || {};
   };
   
   CGD.Module.prototype = {
+    path: [],
     constructor: CGD.Module,
     under: function(path, f) {
       this.path.push(path);
@@ -86,7 +87,6 @@ CGD.JS = CGD.JS || {};
   function require(filename, type) {
     CGD.mod.require(filename, type);
   }
-  CGD.Module.prototype.path = require.path = [];
   CGD.JS.require = require;
 
   require.include = function(file, type) {
