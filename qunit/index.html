@@ -101,6 +101,19 @@ test("doesn't get substrings", function() {
   });
 });
 
+test("exceptions don't corrupt context", function() {
+  expect(1);
+  stop();
+  try {
+    new CGD.Module('subdir/subpass.js', function() {
+      throw "blarg";
+    });
+  }
+  catch (s) {}
+  CGD.JS.require("uncorrupted.js");
+  setTimeout(start, 100);
+});
+
 module("require");
 
 test("includes a file", function() {
@@ -149,19 +162,6 @@ test("absolute path context", function() {
   CGD.JS.require.within('subdir/subpass.js', function() {
     ok(CGD.JS.require.path.join('/').match('subdir'), 'subdir now in path');
   });
-});
-
-test("exceptions don't corrupt context", function() {
-  expect(1);
-  stop();
-  try {
-    CGD.JS.require.within('subdir/subpass.js', function() {
-      throw "blarg";
-    });
-  }
-  catch (s) {}
-  CGD.JS.require("pass.js");
-  setTimeout(start, 100);
 });
 
 test("module can load dependencies before continuing", function() {
