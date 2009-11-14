@@ -161,6 +161,13 @@ test("exceptions don't corrupt context", function() {
 test("module can load dependencies before continuing", function() {
   expect(1);
   stop();
+  CGD.JS.require('subdir/submod.js');
+  setTimeout(start, 100);
+});
+
+test("handles base directory module", function() {
+  expect(1);
+  stop();
   CGD.JS.require('module.js');
   setTimeout(start, 100);
 });

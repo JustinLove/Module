@@ -133,7 +133,7 @@ CGD.JS = CGD.JS || {};
     if (require.files[path]) {
       return null;
     } else {
-      return new CGD.Dependency(path).register();
+      return new CGD.Dependency(path);
     }
   };
   
