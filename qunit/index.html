@@ -41,6 +41,10 @@ test("infer file type", function() {
   equals(new CGD.Dependency('type.css').type(), 'text/css');
 });
 
+test("makes elements", function() {
+  ok(CGD.JS.require.makeTag('foo', {bar: 'bar'}));
+});
+
 module("require");
 
 test("includes a file", function() {

@@ -76,13 +76,18 @@ CGD.JS = CGD.JS || {};
     }
   };
 
-  require.addTagToHead = function(tag, attributes) {
+  require.makeTag = function(tag, attributes) {
     var element = document.createElement(tag);
     for (var a in attributes) {
       if (attributes.hasOwnProperty(a)) {
         element.setAttribute(a, attributes[a]);
       }
     }
+    return element;
+  };
+
+  require.addTagToHead = function(tag, attributes) {
+    var element = require.makeTag(tag, attributes);
     element.onload = element.onreadystatechange = require.onload;
     document.getElementsByTagName('head')[0].appendChild(element);
   };
