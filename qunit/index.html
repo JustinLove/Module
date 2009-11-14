@@ -54,6 +54,12 @@ test("makes matching element", function() {
   ok(new CGD.Dependency('el.js').element());
 });
 
+test("improves canonicalPath", function() {
+  file = new CGD.Dependency('subdir/../el.js');
+  file.element();
+  ok(file.canonicalPath.match('qunit/el.js'), file.canonicalPath);
+});
+
 module("require");
 
 test("includes a file", function() {

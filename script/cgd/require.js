@@ -33,9 +33,13 @@ CGD.JS = CGD.JS || {};
       var inferredType = type || this.type;
       switch (inferredType) {
         case 'text/javascript':
-          return require.makeTag('script', {src: this.canonicalPath, type: inferredType, language: 'javascript'});
+          var element = require.makeTag('script', {src: this.canonicalPath, type: inferredType, language: 'javascript'});
+          this.canonicalPath = element.src;
+          return element;
         case 'text/css':
-          return require.makeTag('link', {href: this.canonicalPath, type: inferredType, rel: 'stylesheet'});
+          var element = require.makeTag('link', {href: this.canonicalPath, type: inferredType, rel: 'stylesheet'});
+          this.canonicalPath = element.href;
+          return element;
         default:
           throw "Don't know how to include " + type;
       }
