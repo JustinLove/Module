@@ -18,6 +18,7 @@ CGD.JS = CGD.JS || {};
   CGD.Dependency = function(path, fullPath) {
     this.path = path || fullPath.substr(require.root().length);
     this.canonicalPath = fullPath || (require.root() + path);
+    this.type = require.guessFileType(this.path);
   };
 
   CGD.Dependency.prototype = {
@@ -28,15 +29,8 @@ CGD.JS = CGD.JS || {};
       require.queued++;
       return this;
     },
-    type: function() {
-      switch (this.path.match(/\.(\w*)$/)[1]) {
-        case 'js': return 'text/javascript';
-        case 'css': return 'text/css';
-        default: return null;
-      }
-    },
     element: function(type) {
-      var inferredType = type || this.type();
+      var inferredType = type || this.type;
       switch (inferredType) {
         case 'text/javascript':
           return require.makeTag('script', {src: this.canonicalPath, type: inferredType, language: 'javascript'});
@@ -77,6 +71,13 @@ CGD.JS = CGD.JS || {};
         break;
       default: break;
     }
+  };
+
+  require.guessFileType = function(path) {
+    return {
+      'js': 'text/javascript',
+      'css': 'text/css'
+    }[path.match(/\.(\w*)$/)[1]];
   };
 
   require.makeTag = function(tag, attributes) {
