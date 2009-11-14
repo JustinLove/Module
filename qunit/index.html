@@ -79,20 +79,20 @@ test("construct a module", function() {
 
 test("relative path context", function() {
   new CGD.Module("dummy.js", function(mod){
-    ok(!mod.path.join('/').match('subdir'), 'subdir not previously in path');
+    ok(!mod.path.match('subdir'), 'subdir not previously in path');
     mod.under('subdir', function(m) {
-      ok(m.path.join('/').match('subdir'), 'subdir now in path');
+      ok(m.path.match('subdir'), 'subdir now in path');
     });
-    ok(!mod.path.join('/').match('subdir'), 'subdir not in path');
+    ok(!mod.path.match('subdir'), 'subdir not in path');
   });
 });
 
 test("absolute path context", function() {
-  ok(!CGD.mod.path.join('/').match('subdir'), 'subdir not previously in path');
+  ok(!CGD.mod.path.match('subdir'), 'subdir not previously in path');
   new CGD.Module('subdir/subpass.js', function(m) {
-    ok(m.path.join('/').match('subdir'), 'subdir now in path');
+    ok(m.path.match('subdir'), 'subdir now in path');
   });
-  ok(!CGD.mod.path.join('/').match('subdir'), 'subdir not in path');
+  ok(!CGD.mod.path.match('subdir'), 'subdir not in path');
 });
 
 test("doesn't get substrings", function() {

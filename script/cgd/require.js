@@ -64,11 +64,11 @@ CGD.JS = CGD.JS || {};
   };
   
   CGD.Module.prototype = {
-    path: [],
+    path: '',
     constructor: CGD.Module,
     under: function(path, f) {
       var m = this.beget();
-      m.path = m.path.concat(path);
+      m.path = m.path + path + '/';
       f(m);
     },
     beget: function() {
@@ -77,7 +77,7 @@ CGD.JS = CGD.JS || {};
       return new F();
     },
     require: function(filename, type) {
-      var file = require.once(this.path.concat(filename).join('/'));
+      var file = require.once(this.path + filename);
       if (file) {
         var element = file.element(type);
         if (!require.files[file.canonicalPath]) {
