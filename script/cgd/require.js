@@ -16,8 +16,8 @@ CGD.JS = CGD.JS || {};
   }
 
   CGD.Dependency = function(path, fullPath) {
-    this.path = path || fullPath.substr(require.root().length);
-    this.canonicalPath = fullPath || (require.root() + path);
+    this.path = path;
+    this.canonicalPath = fullPath || path;
     this.type = require.guessFileType(this.path);
   };
 
@@ -133,7 +133,7 @@ CGD.JS = CGD.JS || {};
     if (require.files[path]) {
       return null;
     } else {
-      return new CGD.Dependency(path);
+      return new CGD.Dependency(path, require.root() + path);
     }
   };
   
@@ -213,11 +213,12 @@ CGD.JS = CGD.JS || {};
   require.alreadyNamed = function(tag, attr) {
     var tags = document.getElementsByTagName(tag);
     for (var i = 0;i < tags.length;i++) {
-      var path = tags[i][attr];
-      if (path.indexOf(require.root()) == 0) {
-        new CGD.Dependency(null, path).register();
+      var fullPath = tags[i][attr];
+      if (fullPath.indexOf(require.root()) == 0) {
+        var relativePath = fullPath.substr(require.root().length);
+        new CGD.Dependency(relativePath, fullPath).register();
         require.loaded++;
-        require.complete[path] = true;
+        require.complete[fullPath] = true;
       }
     }
   };
