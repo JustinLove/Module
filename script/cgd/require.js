@@ -160,6 +160,7 @@ CGD.JS = CGD.JS || {};
       if (path.indexOf(require.root()) == 0) {
         require.queued++;
         require.files[path.substr(require.root().length)] = path;
+        require.files[path] = path;
         require.loaded++;
         require.complete[path] = true;
       }
@@ -170,4 +171,9 @@ CGD.JS = CGD.JS || {};
     require.alreadyNamed('script', 'src');
     require.alreadyNamed('link', 'href');
   });
+  
+  CGD.Dependency = function(path) {
+    this.path = path;
+  };
+  
 }());

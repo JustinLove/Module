@@ -14,6 +14,14 @@
 
   <script>
 
+module("Dependency");
+
+test("Can construct a dependency", function() {
+  ok(new CGD.Dependency('pass.js'));
+});
+
+module("require");
+
 test("includes a file", function() {
   expect(1);
   stop();
