@@ -45,6 +45,11 @@ test("makes elements", function() {
   ok(CGD.JS.require.makeTag('foo', {bar: 'bar'}));
 });
 
+test("adds an element to head", function() {
+  CGD.JS.require.addElementToHead(CGD.JS.require.makeTag('foo', {bar: 'bar'}));
+  equals(document.getElementsByTagName('foo').length, 1);
+});
+
 module("require");
 
 test("includes a file", function() {

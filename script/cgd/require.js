@@ -89,6 +89,10 @@ CGD.JS = CGD.JS || {};
   require.addTagToHead = function(tag, attributes) {
     var element = require.makeTag(tag, attributes);
     element.onload = element.onreadystatechange = require.onload;
+    require.addElementToHead(element);
+  };
+
+  require.addElementToHead = function(element) {
     document.getElementsByTagName('head')[0].appendChild(element);
   };
 
