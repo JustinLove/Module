@@ -50,6 +50,10 @@ test("adds an element to head", function() {
   equals(document.getElementsByTagName('foo').length, 1);
 });
 
+test("makes matching element", function() {
+  ok(new CGD.Dependency('el.js').element());
+});
+
 module("require");
 
 test("includes a file", function() {

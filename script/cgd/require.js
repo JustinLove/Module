@@ -34,6 +34,17 @@ CGD.JS = CGD.JS || {};
         case 'css': return this.type = 'text/css';
         default: return null;
       }
+    },
+    element: function(type) {
+      var inferredType = type || this.type();
+      switch (inferredType) {
+        case 'text/javascript':
+          return require.makeTag('script', {src: this.canonicalPath, type: inferredType, language: 'javascript'});
+        case 'text/css':
+          return require.makeTag('link', {href: this.canonicalPath, type: inferredType, rel: 'stylesheet'});
+        default:
+          throw "Don't know how to include " + type;
+      }
     }
   };
 
@@ -51,17 +62,9 @@ CGD.JS = CGD.JS || {};
     if (typeof(file) == 'string') {
       file = new CGD.Dependency(file);
     }
-    var inferredType = type || file.type();
-    switch (inferredType) {
-      case 'text/javascript':
-        require.addTagToHead('script', {src: file.canonicalPath, type: inferredType, language: 'javascript'});
-        break;
-      case 'text/css':
-        require.addTagToHead('link', {href: file.canonicalPath, type: inferredType, rel: 'stylesheet'});
-        break;
-      default:
-        throw "Don't know how to include " + type;
-    }
+    var element = file.element(type);
+    element.onload = element.onreadystatechange = require.onload;
+    require.addElementToHead(element);
   };
 
   require.onload = function() {
@@ -84,12 +87,6 @@ CGD.JS = CGD.JS || {};
       }
     }
     return element;
-  };
-
-  require.addTagToHead = function(tag, attributes) {
-    var element = require.makeTag(tag, attributes);
-    element.onload = element.onreadystatechange = require.onload;
-    require.addElementToHead(element);
   };
 
   require.addElementToHead = function(element) {
