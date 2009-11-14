@@ -172,9 +172,9 @@ CGD.JS = CGD.JS || {};
     require.alreadyNamed('link', 'href');
   });
   
-  CGD.Dependency = function(path) {
-    this.path = path;
-    this.canonicalPath = require.root() + path;
+  CGD.Dependency = function(path, fullPath) {
+    this.path = path || fullPath.substr(require.root().length);
+    this.canonicalPath = fullPath || (require.root() + path);
   };
   
 }());
