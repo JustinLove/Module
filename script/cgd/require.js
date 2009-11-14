@@ -67,9 +67,14 @@ CGD.JS = CGD.JS || {};
     path: [],
     constructor: CGD.Module,
     under: function(path, f) {
-      this.path.push(path);
-      try { f(this); }
-      finally { this.path.pop(); }
+      var m = this.beget();
+      m.path = m.path.concat(path);
+      f(m);
+    },
+    beget: function() {
+      var F = function(){};
+      F.prototype = this;
+      return new F();
     },
     require: function(filename, type) {
       var file = require.once(this.path.concat(filename).join('/'));
