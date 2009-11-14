@@ -169,22 +169,6 @@ test("require includes a file only once", function() {
   setTimeout(start, 100);
 });
 
-test("relative path context", function() {
-  expect(1);
-  stop();
-  CGD.JS.require.under('subdir', function() {
-    CGD.JS.require('subpass.js');
-  });
-  setTimeout(start, 100);
-});
-
-test("absolute path context", function() {
-  ok(!CGD.JS.require.path.join('/').match('subdir'), 'subdir not previously in path');
-  CGD.JS.require.within('subdir/subpass.js', function() {
-    ok(CGD.JS.require.path.join('/').match('subdir'), 'subdir now in path');
-  });
-});
-
   </script>
   
 </head>

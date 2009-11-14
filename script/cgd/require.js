@@ -142,12 +142,6 @@ CGD.JS = CGD.JS || {};
     return require.roots.slice(-1)[0];
   };
 
-  require.under = function(path, f) {
-    require.path.push(path);
-    try { f(); }
-    finally { require.path.pop(); }
-  };
-  
   require.rooted = function(path, f) {
     require.roots.push(path);
     try { f(); }
@@ -169,22 +163,6 @@ CGD.JS = CGD.JS || {};
     }
   };
   
-  require.within = function(file, f) {
-    var path = require.pathTo(file);
-    var fullPath = require.findMe('script', 'src', file);
-    var queued = require.queued;
-    if (fullPath) {
-      var root = fullPath.slice(0, -file.length);
-      require.rooted(root, function() {require.under(path, f);});
-    } else {
-      require.under(path, f);
-    }
-    if (require.queued > queued) {
-      require.include(file);
-      throw new require.DependenciesNotYetLoaded;
-    }
-  };
-
   require.pathTo = function(file) {
     var slash = file.lastIndexOf('/');
     if (slash >= 1) {
