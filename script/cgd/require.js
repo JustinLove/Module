@@ -14,7 +14,23 @@ CGD.JS = CGD.JS || {};
       CGD.DEBUG.p.apply(CGD.DEBUG, arguments);
     }
   }
-  
+
+  CGD.Dependency = function(path, fullPath) {
+    this.path = path || fullPath.substr(require.root().length);
+    this.canonicalPath = fullPath || (require.root() + path);
+  };
+
+  CGD.Dependency.prototype = {
+    constructor: CGD.Dependency,
+    register: function() {
+      require.files[this.path] = this;
+      require.files[this.canonicalPath] = this;
+      require.queued++;
+      return this;
+    }
+  };
+
+
   function require(filename, type) {
     var file = require.once(require.path.concat(filename).join('/'));
     if (file) {
@@ -79,8 +95,7 @@ CGD.JS = CGD.JS || {};
     if (require.files[path]) {
       return null;
     } else {
-      require.queued++;
-      return require.files[path] = require.root() + path;
+      return new CGD.Dependency(path).register().canonicalPath;
     }
   };
   
@@ -158,9 +173,7 @@ CGD.JS = CGD.JS || {};
     for (var i = 0;i < tags.length;i++) {
       var path = tags[i][attr];
       if (path.indexOf(require.root()) == 0) {
-        require.queued++;
-        require.files[path.substr(require.root().length)] = path;
-        require.files[path] = path;
+        new CGD.Dependency(null, path).register();
         require.loaded++;
         require.complete[path] = true;
       }
@@ -171,20 +184,5 @@ CGD.JS = CGD.JS || {};
     require.alreadyNamed('script', 'src');
     require.alreadyNamed('link', 'href');
   });
-  
-  CGD.Dependency = function(path, fullPath) {
-    this.path = path || fullPath.substr(require.root().length);
-    this.canonicalPath = fullPath || (require.root() + path);
-  };
-  
-  CGD.Dependency.prototype = {
-    constructor: CGD.Dependency,
-    register: function() {
-      require.files[this.path] = this;
-      require.files[this.canonicalPath] = this;
-      require.queued++;
-      return this;
-    }
-  };
   
 }());
