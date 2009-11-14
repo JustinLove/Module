@@ -36,6 +36,11 @@ test("registers itself", function() {
   equals(CGD.JS.require.files[x.canonicalPath], x, 'canonicalPath is registered');
 });
 
+test("infer file type", function() {
+  equals(new CGD.Dependency('type.js').guessFileType(), 'text/javascript');
+  equals(new CGD.Dependency('type.css').guessFileType(), 'text/css');
+});
+
 module("require");
 
 test("includes a file", function() {

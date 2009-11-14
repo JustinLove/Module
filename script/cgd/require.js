@@ -27,6 +27,17 @@ CGD.JS = CGD.JS || {};
       require.files[this.canonicalPath] = this;
       require.queued++;
       return this;
+    },
+    guessFileType: function(type) {
+      if (type) {
+        return this.type = type;
+      } else {
+        switch (this.path.match(/\.(\w*)$/)[1]) {
+          case 'js': return this.type = 'text/javascript';
+          case 'css': return this.type = 'text/css';
+          default: return null;
+        }
+      }
     }
   };
 
@@ -41,28 +52,19 @@ CGD.JS = CGD.JS || {};
   CGD.JS.require = require;
 
   require.include = function(file, type) {
-    var inferredType = require.guessFileType(file, type);
-    switch (inferredType) {
+    if (typeof(file) == 'string') {
+      file = new CGD.Dependency(file);
+    }
+    file.guessFileType(type);
+    switch (file.type) {
       case 'text/javascript':
-        require.addTagToHead('script', {src: file, type: inferredType, language: 'javascript'});
+        require.addTagToHead('script', {src: file.canonicalPath, type: file.type, language: 'javascript'});
         break;
       case 'text/css':
-        require.addTagToHead('link', {href: file, type: inferredType, rel: 'stylesheet'});
+        require.addTagToHead('link', {href: file.canonicalPath, type: file.type, rel: 'stylesheet'});
         break;
       default:
         throw "Don't know how to include " + type;
-    }
-  };
-
-  require.guessFileType = function(file, type) {
-    if (type) {
-      return type;
-    } else {
-      switch (file.match(/\.(\w*)$/)[1]) {
-        case 'js': return 'text/javascript';
-        case 'css': return 'text/css';
-        default: return null;
-      }
     }
   };
 
@@ -95,7 +97,7 @@ CGD.JS = CGD.JS || {};
     if (require.files[path]) {
       return null;
     } else {
-      return new CGD.Dependency(path).register().canonicalPath;
+      return new CGD.Dependency(path).register();
     }
   };
   
