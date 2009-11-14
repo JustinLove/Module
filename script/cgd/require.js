@@ -84,15 +84,7 @@ CGD.JS = CGD.JS || {};
   };
 
   function require(filename, type) {
-    var file = require.once(require.path.concat(filename).join('/'));
-    if (file) {
-      var element = file.element(type);
-      if (!require.files[file.canonicalPath]) {
-        file.register();
-        element.onload = element.onreadystatechange = require.onload;
-        require.addElementToHead(element);
-      }
-    }
+    CGD.mod.require(filename, type);
   }
   CGD.Module.prototype.path = require.path = [];
   CGD.JS.require = require;
@@ -211,6 +203,8 @@ CGD.JS = CGD.JS || {};
       }
     }
   };
+  
+  CGD.mod = new CGD.Module('require.js', function(){});
   
   require.rooted(require.pathTo(window.location + "") + '/', function() {
     require.alreadyNamed('script', 'src');
