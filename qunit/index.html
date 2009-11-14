@@ -95,6 +95,12 @@ test("absolute path context", function() {
   ok(!CGD.JS.require.path.join('/').match('subdir'), 'subdir not in path');
 });
 
+test("doesn't get substrings", function() {
+  new CGD.Module('ias.js', function(m) {
+    ok(!CGD.JS.require.root().match('al$'), CGD.JS.require.root());
+  });
+});
+
 module("require");
 
 test("includes a file", function() {

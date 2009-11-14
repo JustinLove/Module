@@ -196,7 +196,11 @@ CGD.JS = CGD.JS || {};
   
   require.findMe = function(tag, attr, file) {
     var tags = document.getElementsByTagName(tag);
-    var r = new RegExp(file + '$');
+    if (file[0] == '/') {
+      var r = new RegExp(file + '$');
+    } else {
+      var r = new RegExp('/' + file + '$');
+    }
     for (var i = 0;i < tags.length;i++) {
       if (r.exec(tags[i][attr])) {
         return tags[i][attr];
