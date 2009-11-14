@@ -20,6 +20,11 @@ test("Can construct a dependency", function() {
   ok(new CGD.Dependency('pass.js'));
 });
 
+test("has canonicalPath property", function()
+{
+  ok(new CGD.Dependency('pass.js').canonicalPath);
+});
+
 module("require");
 
 test("includes a file", function() {

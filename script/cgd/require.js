@@ -174,6 +174,7 @@ CGD.JS = CGD.JS || {};
   
   CGD.Dependency = function(path) {
     this.path = path;
+    this.canonicalPath = require.root() + path;
   };
   
 }());
