@@ -28,15 +28,11 @@ CGD.JS = CGD.JS || {};
       require.queued++;
       return this;
     },
-    guessFileType: function(type) {
-      if (type) {
-        return this.type = type;
-      } else {
-        switch (this.path.match(/\.(\w*)$/)[1]) {
-          case 'js': return this.type = 'text/javascript';
-          case 'css': return this.type = 'text/css';
-          default: return null;
-        }
+    type: function() {
+      switch (this.path.match(/\.(\w*)$/)[1]) {
+        case 'js': return this.type = 'text/javascript';
+        case 'css': return this.type = 'text/css';
+        default: return null;
       }
     }
   };
@@ -55,13 +51,13 @@ CGD.JS = CGD.JS || {};
     if (typeof(file) == 'string') {
       file = new CGD.Dependency(file);
     }
-    file.guessFileType(type);
-    switch (file.type) {
+    var inferredType = type || file.type();
+    switch (inferredType) {
       case 'text/javascript':
-        require.addTagToHead('script', {src: file.canonicalPath, type: file.type, language: 'javascript'});
+        require.addTagToHead('script', {src: file.canonicalPath, type: inferredType, language: 'javascript'});
         break;
       case 'text/css':
-        require.addTagToHead('link', {href: file.canonicalPath, type: file.type, rel: 'stylesheet'});
+        require.addTagToHead('link', {href: file.canonicalPath, type: inferredType, rel: 'stylesheet'});
         break;
       default:
         throw "Don't know how to include " + type;

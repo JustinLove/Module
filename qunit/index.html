@@ -37,8 +37,8 @@ test("registers itself", function() {
 });
 
 test("infer file type", function() {
-  equals(new CGD.Dependency('type.js').guessFileType(), 'text/javascript');
-  equals(new CGD.Dependency('type.css').guessFileType(), 'text/css');
+  equals(new CGD.Dependency('type.js').type(), 'text/javascript');
+  equals(new CGD.Dependency('type.css').type(), 'text/css');
 });
 
 module("require");
