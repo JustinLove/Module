@@ -68,6 +68,15 @@ test("require avoids aliasing", function() {
   setTimeout(start, 100);
 });
 
+module("Module");
+
+test("construct a module", function() {
+  expect(1);
+  new CGD.Module('subdir/subpass.js', function(m) {
+    ok(m);
+  });
+});
+
 module("require");
 
 test("includes a file", function() {

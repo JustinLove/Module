@@ -46,6 +46,9 @@ CGD.JS = CGD.JS || {};
     }
   };
 
+  CGD.Module = function(path, f) {
+    f(this);
+  };
 
   function require(filename, type) {
     var file = require.once(require.path.concat(filename).join('/'));
