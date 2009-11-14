@@ -30,8 +30,8 @@ CGD.JS = CGD.JS || {};
     },
     type: function() {
       switch (this.path.match(/\.(\w*)$/)[1]) {
-        case 'js': return this.type = 'text/javascript';
-        case 'css': return this.type = 'text/css';
+        case 'js': return 'text/javascript';
+        case 'css': return 'text/css';
         default: return null;
       }
     },
