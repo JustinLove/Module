@@ -177,4 +177,14 @@ CGD.JS = CGD.JS || {};
     this.canonicalPath = fullPath || (require.root() + path);
   };
   
+  CGD.Dependency.prototype = {
+    constructor: CGD.Dependency,
+    register: function() {
+      require.files[this.path] = this;
+      require.files[this.canonicalPath] = this;
+      require.queued++;
+      return this;
+    }
+  };
+  
 }());

@@ -20,9 +20,20 @@ test("Can construct a dependency", function() {
   ok(new CGD.Dependency('pass.js'));
 });
 
+test("has path property", function()
+{
+  ok(new CGD.Dependency('pass.js').path);
+});
+
 test("has canonicalPath property", function()
 {
   ok(new CGD.Dependency('pass.js').canonicalPath);
+});
+
+test("registers itself", function() {
+  var x = new CGD.Dependency('x.js').register();
+  equals(CGD.JS.require.files[x.path], x, 'path is registered');
+  equals(CGD.JS.require.files[x.canonicalPath], x, 'canonicalPath is registered');
 });
 
 module("require");
