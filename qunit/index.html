@@ -114,6 +114,27 @@ test("exceptions don't corrupt context", function() {
   setTimeout(start, 100);
 });
 
+test("module can load dependencies before continuing", function() {
+  expect(1);
+  stop();
+  CGD.JS.require('subdir/submod.js');
+  setTimeout(start, 100);
+});
+
+test("handles base directory module", function() {
+  expect(1);
+  stop();
+  CGD.JS.require('module.js');
+  setTimeout(start, 100);
+});
+
+test("out-of-order mutual dependencies", function() {
+  expect(3);
+  stop();
+  CGD.JS.require('conflict/top.js');
+  setTimeout(start, 100);
+});
+
 module("require");
 
 test("includes a file", function() {
@@ -164,26 +185,6 @@ test("absolute path context", function() {
   });
 });
 
-test("module can load dependencies before continuing", function() {
-  expect(1);
-  stop();
-  CGD.JS.require('subdir/submod.js');
-  setTimeout(start, 100);
-});
-
-test("handles base directory module", function() {
-  expect(1);
-  stop();
-  CGD.JS.require('module.js');
-  setTimeout(start, 100);
-});
-
-test("out-of-order mutual dependencies", function() {
-  expect(3);
-  stop();
-  CGD.JS.require('conflict/top.js');
-  setTimeout(start, 100);
-});
   </script>
   
 </head>

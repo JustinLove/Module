@@ -1,4 +1,4 @@
-CGD.JS.require.within('conflict/a.js', function() {
+new CGD.Module('conflict/a.js', function() {
   CGD.JS.require('b.js');
 });
 CGD.test.a = 'a';

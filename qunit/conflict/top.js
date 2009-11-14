@@ -1,5 +1,5 @@
 CGD.test = CGD.test || {};
-CGD.JS.require.within('conflict/top.js', function() {
+new CGD.Module('conflict/top.js', function(m) {
   CGD.JS.require('a.js');
   CGD.JS.require('b.js');
 });
