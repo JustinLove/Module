@@ -22,10 +22,15 @@ CGD.JS = CGD.JS || {};
   };
 
   CGD.Dependency.prototype = {
+    readyState: 'pending',
     constructor: CGD.Dependency,
     register: function(files) {
       files[this.path] = this;
       files[this.canonicalPath] = this;
+      return this;
+    },
+    load: function() {
+      this.readyState = 'loaded';
       return this;
     },
     element: function(type) {
