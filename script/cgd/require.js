@@ -50,13 +50,10 @@ CGD.JS = CGD.JS || {};
     var path = require.pathTo(file);
     var fullPath = require.findMe('script', 'src', file);
     var queued = require.queued;
-    var m = this;
     if (fullPath) {
-      var root = fullPath.slice(0, -file.length);
-      require.rooted(root, function() {m.under(path, f);});
-    } else {
-      m.under(path, f);
+      this.root = fullPath.slice(0, -file.length);
     }
+    this.under(path, f);
     if (require.queued > queued) {
       require.include(file);
       throw new require.DependenciesNotYetLoaded;
@@ -65,6 +62,7 @@ CGD.JS = CGD.JS || {};
   
   CGD.Module.prototype = {
     path: '',
+    root: '',
     constructor: CGD.Module,
     under: function(path, f) {
       var m = this.beget();
@@ -91,15 +89,15 @@ CGD.JS = CGD.JS || {};
       if (require.files[path]) {
         return null;
       } else {
-        return new CGD.Dependency(path, require.root() + path);
+        return new CGD.Dependency(path, this.root + path);
       }
     },
     alreadyNamed: function(tag, attr) {
       var tags = document.getElementsByTagName(tag);
       for (var i = 0;i < tags.length;i++) {
         var fullPath = tags[i][attr];
-        if (fullPath.indexOf(require.root()) == 0) {
-          var relativePath = fullPath.substr(require.root().length);
+        if (fullPath.indexOf(this.root) == 0) {
+          var relativePath = fullPath.substr(this.root.length);
           new CGD.Dependency(relativePath, fullPath).register();
           require.loaded++;
           require.complete[fullPath] = true;
@@ -157,17 +155,6 @@ CGD.JS = CGD.JS || {};
   require.files = {};
   require.queued = 0;
   
-  require.roots = [""];
-  require.root = function() {
-    return require.roots.slice(-1)[0];
-  };
-
-  require.rooted = function(path, f) {
-    require.roots.push(path);
-    try { f(); }
-    finally { require.roots.pop(); }
-  };
-
   require.DependenciesNotYetLoaded = function() {};
   var dnyl = require.DependenciesNotYetLoaded.prototype;
   dnyl.name = "DependenciesNotYetLoaded";
@@ -211,9 +198,9 @@ CGD.JS = CGD.JS || {};
   
   CGD.mod = new CGD.Module('require.js', function(){});
   
-  require.rooted(require.pathTo(window.location + "") + '/', function() {
-    CGD.mod.alreadyNamed('script', 'src');
-    CGD.mod.alreadyNamed('link', 'href');
-  });
+  //outside because file increase normally triggeres abort and reload
+  CGD.mod.root = require.pathTo(window.location.toString()) + '/';
+  CGD.mod.alreadyNamed('script', 'src');
+  CGD.mod.alreadyNamed('link', 'href');
   
 }());

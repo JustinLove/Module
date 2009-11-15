@@ -97,7 +97,7 @@ test("absolute path context", function() {
 
 test("doesn't get substrings", function() {
   new CGD.Module('ias.js', function(m) {
-    ok(!CGD.JS.require.root().match('al$'), CGD.JS.require.root());
+    ok(!m.root.match('al$'), m.root);
   });
 });
 
