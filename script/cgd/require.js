@@ -52,7 +52,8 @@ CGD.JS = CGD.JS || {};
     if (fullPath) {
       this.root = fullPath.slice(0, -file.length);
     }
-    this.under(path, f);
+    this.path += path + '/';
+    f(this);
     if (this.queued > 0) {
       require.include(file);
       throw new require.DependenciesNotYetLoaded;
@@ -66,7 +67,7 @@ CGD.JS = CGD.JS || {};
     constructor: CGD.Module,
     under: function(path, f) {
       var m = this.beget();
-      m.path = m.path + path + '/';
+      m.path += path + '/';
       f(m);
       this.queued += m.queued;
     },
@@ -195,11 +196,10 @@ CGD.JS = CGD.JS || {};
   require.complete = {};
   require.loaded = 0;
   
-  CGD.mod = new CGD.Module('require.js', function(){});
-  
-  //outside because file increase normally triggeres abort and reload
-  CGD.mod.root = require.pathTo(window.location.toString()) + '/';
-  CGD.mod.alreadyNamed('script', 'src');
-  CGD.mod.alreadyNamed('link', 'href');
+  CGD.mod = new CGD.Module('require.js', function(m){
+    m.root = require.pathTo(window.location.toString()) + '/';
+    m.alreadyNamed('script', 'src');
+    m.alreadyNamed('link', 'href');
+  });
   
 }());
