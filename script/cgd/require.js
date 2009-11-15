@@ -93,6 +93,18 @@ CGD.JS = CGD.JS || {};
       } else {
         return new CGD.Dependency(path, require.root() + path);
       }
+    },
+    alreadyNamed: function(tag, attr) {
+      var tags = document.getElementsByTagName(tag);
+      for (var i = 0;i < tags.length;i++) {
+        var fullPath = tags[i][attr];
+        if (fullPath.indexOf(require.root()) == 0) {
+          var relativePath = fullPath.substr(require.root().length);
+          new CGD.Dependency(relativePath, fullPath).register();
+          require.loaded++;
+          require.complete[fullPath] = true;
+        }
+      }
     }
   };
 
@@ -196,24 +208,12 @@ CGD.JS = CGD.JS || {};
 
   require.complete = {};
   require.loaded = 0;
-  require.alreadyNamed = function(tag, attr) {
-    var tags = document.getElementsByTagName(tag);
-    for (var i = 0;i < tags.length;i++) {
-      var fullPath = tags[i][attr];
-      if (fullPath.indexOf(require.root()) == 0) {
-        var relativePath = fullPath.substr(require.root().length);
-        new CGD.Dependency(relativePath, fullPath).register();
-        require.loaded++;
-        require.complete[fullPath] = true;
-      }
-    }
-  };
   
   CGD.mod = new CGD.Module('require.js', function(){});
   
   require.rooted(require.pathTo(window.location + "") + '/', function() {
-    require.alreadyNamed('script', 'src');
-    require.alreadyNamed('link', 'href');
+    CGD.mod.alreadyNamed('script', 'src');
+    CGD.mod.alreadyNamed('link', 'href');
   });
   
 }());
