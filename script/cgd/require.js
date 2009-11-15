@@ -26,7 +26,6 @@ CGD.JS = CGD.JS || {};
     register: function(files) {
       files[this.path] = this;
       files[this.canonicalPath] = this;
-      require.queued++;
       return this;
     },
     element: function(type) {
@@ -49,12 +48,12 @@ CGD.JS = CGD.JS || {};
   CGD.Module = function(file, f) {
     var path = require.pathTo(file);
     var fullPath = require.findMe('script', 'src', file);
-    var queued = require.queued;
+    this.queued = 0;
     if (fullPath) {
       this.root = fullPath.slice(0, -file.length);
     }
     this.under(path, f);
-    if (require.queued > queued) {
+    if (this.queued > 0) {
       require.include(file);
       throw new require.DependenciesNotYetLoaded;
     }
@@ -69,6 +68,7 @@ CGD.JS = CGD.JS || {};
       var m = this.beget();
       m.path = m.path + path + '/';
       f(m);
+      this.queued += m.queued;
     },
     beget: function() {
       var F = function(){};
@@ -81,6 +81,7 @@ CGD.JS = CGD.JS || {};
         var element = file.element(type);
         if (!this.files[file.canonicalPath]) {
           file.register(this.files);
+          this.queued++;
           element.onload = element.onreadystatechange = require.onload;
           require.addElementToHead(element);
         }
@@ -153,8 +154,6 @@ CGD.JS = CGD.JS || {};
     document.getElementsByTagName('head')[0].appendChild(element);
   };
 
-  require.queued = 0;
-  
   require.DependenciesNotYetLoaded = function() {};
   var dnyl = require.DependenciesNotYetLoaded.prototype;
   dnyl.name = "DependenciesNotYetLoaded";
