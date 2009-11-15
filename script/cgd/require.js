@@ -33,6 +33,19 @@ CGD.JS = CGD.JS || {};
       this.readyState = 'loaded';
       return this;
     },
+    onloadFactory: function() {
+      var file = this;
+      return function() {
+        switch (this.readyState) {
+          case undefined:
+          case 'loaded':
+          case 'complete':
+            file.load();
+            break;
+          default: break;
+        }
+      };
+    },
     element: function(type) {
       var inferredType = type || this.type;
       switch (inferredType) {
@@ -93,7 +106,7 @@ CGD.JS = CGD.JS || {};
         if (!this.files[file.canonicalPath]) {
           file.register(this.files);
           this.queued++;
-          element.onload = element.onreadystatechange = require.onload;
+          element.onload = element.onreadystatechange = file.onloadFactory();
           require.addElementToHead(element);
         }
       }
@@ -128,18 +141,6 @@ CGD.JS = CGD.JS || {};
     }
     var element = file.element(type);
     require.addElementToHead(element);
-  };
-
-  require.onload = function() {
-    switch (this.readyState) {
-      case undefined:
-      case 'loaded':
-      case 'complete':
-        require.complete[this.src] = true;
-        require.loaded++;
-        break;
-      default: break;
-    }
   };
 
   require.guessFileType = function(path) {
@@ -201,9 +202,6 @@ CGD.JS = CGD.JS || {};
     }
   };
 
-  require.complete = {};
-  require.loaded = 0;
-  
   CGD.mod = new CGD.Module('require.js', function(m){
     m.root = require.pathTo(window.location.toString()) + '/';
     m.alreadyNamed('script', 'src');
