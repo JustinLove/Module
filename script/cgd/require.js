@@ -111,9 +111,7 @@ CGD.JS = CGD.JS || {};
         var fullPath = tags[i][attr];
         if (fullPath.indexOf(this.root) == 0) {
           var relativePath = fullPath.substr(this.root.length);
-          new CGD.Dependency(relativePath, fullPath).register(this.files);
-          require.loaded++;
-          require.complete[fullPath] = true;
+          new CGD.Dependency(relativePath, fullPath).register(this.files).load();
         }
       }
     }
