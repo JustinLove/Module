@@ -52,7 +52,7 @@ CGD.JS = CGD.JS || {};
     if (fullPath) {
       this.root = fullPath.slice(0, -file.length);
     }
-    this.path += path + '/';
+    this.cd(path);
     f(this);
     if (this.queued > 0) {
       require.include(file);
@@ -65,9 +65,14 @@ CGD.JS = CGD.JS || {};
     root: '',
     files: {}, // typically shared by all instances
     constructor: CGD.Module,
+    cd: function(path) {
+      if (path != '.') {
+        this.path += path + '/';
+      }
+    },
     under: function(path, f) {
       var m = this.beget();
-      m.path += path + '/';
+      m.cd(path);
       f(m);
       this.queued += m.queued;
     },
