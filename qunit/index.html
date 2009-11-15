@@ -31,9 +31,10 @@ test("has canonicalPath property", function()
 });
 
 test("registers itself", function() {
-  var x = new CGD.Dependency('x.js').register();
-  equals(CGD.JS.require.files[x.path], x, 'path is registered');
-  equals(CGD.JS.require.files[x.canonicalPath], x, 'canonicalPath is registered');
+  var files = {};
+  var x = new CGD.Dependency('x.js').register(files);
+  equals(files[x.path], x, 'path is registered');
+  equals(files[x.canonicalPath], x, 'canonicalPath is registered');
 });
 
 test("infer file type", function() {

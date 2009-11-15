@@ -23,9 +23,9 @@ CGD.JS = CGD.JS || {};
 
   CGD.Dependency.prototype = {
     constructor: CGD.Dependency,
-    register: function() {
-      require.files[this.path] = this;
-      require.files[this.canonicalPath] = this;
+    register: function(files) {
+      files[this.path] = this;
+      files[this.canonicalPath] = this;
       require.queued++;
       return this;
     },
@@ -79,7 +79,7 @@ CGD.JS = CGD.JS || {};
       if (file) {
         var element = file.element(type);
         if (!require.files[file.canonicalPath]) {
-          file.register();
+          file.register(require.files);
           element.onload = element.onreadystatechange = require.onload;
           require.addElementToHead(element);
         }
@@ -98,7 +98,7 @@ CGD.JS = CGD.JS || {};
         var fullPath = tags[i][attr];
         if (fullPath.indexOf(this.root) == 0) {
           var relativePath = fullPath.substr(this.root.length);
-          new CGD.Dependency(relativePath, fullPath).register();
+          new CGD.Dependency(relativePath, fullPath).register(require.files);
           require.loaded++;
           require.complete[fullPath] = true;
         }
