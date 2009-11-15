@@ -77,7 +77,7 @@ CGD.JS = CGD.JS || {};
       return new F();
     },
     require: function(filename, type) {
-      var file = require.once(this.path + filename);
+      var file = this.once(this.path + filename);
       if (file) {
         var element = file.element(type);
         if (!require.files[file.canonicalPath]) {
@@ -85,6 +85,13 @@ CGD.JS = CGD.JS || {};
           element.onload = element.onreadystatechange = require.onload;
           require.addElementToHead(element);
         }
+      }
+    },
+    once: function(path) {
+      if (require.files[path]) {
+        return null;
+      } else {
+        return new CGD.Dependency(path, require.root() + path);
       }
     }
   };
@@ -137,13 +144,6 @@ CGD.JS = CGD.JS || {};
 
   require.files = {};
   require.queued = 0;
-  require.once = function(path) {
-    if (require.files[path]) {
-      return null;
-    } else {
-      return new CGD.Dependency(path, require.root() + path);
-    }
-  };
   
   require.roots = [""];
   require.root = function() {
