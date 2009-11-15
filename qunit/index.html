@@ -154,8 +154,8 @@ test("includes a file twice", function() {
 });
 
 test("detects static script files", function() {
-  for (var i in CGD.JS.require.files) {
-    if (CGD.JS.require.files[i].canonicalPath.match(/qunit.js/)) {
+  for (var i in CGD.mod.files) {
+    if (CGD.mod.files[i].canonicalPath.match(/qunit.js/)) {
       ok(true, 'found static file');
       return;
     }

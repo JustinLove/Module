@@ -63,6 +63,7 @@ CGD.JS = CGD.JS || {};
   CGD.Module.prototype = {
     path: '',
     root: '',
+    files: {}, // typically shared by all instances
     constructor: CGD.Module,
     under: function(path, f) {
       var m = this.beget();
@@ -78,15 +79,15 @@ CGD.JS = CGD.JS || {};
       var file = this.once(this.path + filename);
       if (file) {
         var element = file.element(type);
-        if (!require.files[file.canonicalPath]) {
-          file.register(require.files);
+        if (!this.files[file.canonicalPath]) {
+          file.register(this.files);
           element.onload = element.onreadystatechange = require.onload;
           require.addElementToHead(element);
         }
       }
     },
     once: function(path) {
-      if (require.files[path]) {
+      if (this.files[path]) {
         return null;
       } else {
         return new CGD.Dependency(path, this.root + path);
@@ -98,7 +99,7 @@ CGD.JS = CGD.JS || {};
         var fullPath = tags[i][attr];
         if (fullPath.indexOf(this.root) == 0) {
           var relativePath = fullPath.substr(this.root.length);
-          new CGD.Dependency(relativePath, fullPath).register(require.files);
+          new CGD.Dependency(relativePath, fullPath).register(this.files);
           require.loaded++;
           require.complete[fullPath] = true;
         }
@@ -152,7 +153,6 @@ CGD.JS = CGD.JS || {};
     document.getElementsByTagName('head')[0].appendChild(element);
   };
 
-  require.files = {};
   require.queued = 0;
   
   require.DependenciesNotYetLoaded = function() {};
