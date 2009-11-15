@@ -129,6 +129,17 @@ test("handles base directory module", function() {
   setTimeout(start, 100);
 });
 
+test("file state changes from unloaded to loaded", function() {
+  CGD.mod.require('loadme.js');
+  
+  ok(CGD.mod.files['loadme.js'].readyState != 'loaded', 'not loaded before');
+  stop();
+  setTimeout(function() {
+    equals(CGD.mod.files['loadme.js'].readyState, 'loaded');
+    start();
+  }, 100);
+});
+
 test("out-of-order mutual dependencies", function() {
   expect(3);
   stop();
