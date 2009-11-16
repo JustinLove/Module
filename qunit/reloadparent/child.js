@@ -1,0 +1,1 @@
+equals(CGD.mod.files['reloadparent/parent.js'].readyState, 'pending');

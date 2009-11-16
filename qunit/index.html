@@ -147,6 +147,17 @@ test("file state changes from unloaded to loaded", function() {
   }, 100);
 });
 
+test("canceled load doesn't appear loaded", function() {
+  CGD.mod.require('reloadparent/parent.js');
+  
+  expect(2);
+  stop();
+  setTimeout(function() {
+    equals(CGD.mod.files['reloadparent/parent.js'].readyState, 'loaded');
+    start();
+  }, 100);
+});
+
 test("out-of-order mutual dependencies", function() {
   expect(3);
   stop();
