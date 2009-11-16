@@ -29,6 +29,9 @@ CGD.JS = CGD.JS || {};
       files[this.canonicalPath] = this;
       return this;
     },
+    status: function() {
+      return this.readyState;
+    },
     load: function() {
       this.readyState = 'loaded';
       return this;

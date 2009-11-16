@@ -39,9 +39,9 @@ test("registers itself", function() {
 
 test("can track whether it's loaded", function() {
   var x = new CGD.Dependency('x.js');
-  equals(x.readyState, 'new');
+  equals(x.status(), 'new');
   x.load();
-  equals(x.readyState, 'loaded');
+  equals(x.status(), 'loaded');
 });
 
 test("infer file type", function() {
@@ -139,10 +139,10 @@ test("handles base directory module", function() {
 test("file state changes from unloaded to loaded", function() {
   CGD.mod.require('loadme.js');
   
-  equals(CGD.mod.files['loadme.js'].readyState, 'pending');
+  equals(CGD.mod.files['loadme.js'].status(), 'pending');
   stop();
   setTimeout(function() {
-    equals(CGD.mod.files['loadme.js'].readyState, 'loaded');
+    equals(CGD.mod.files['loadme.js'].status(), 'loaded');
     start();
   }, 100);
 });
@@ -153,7 +153,7 @@ test("canceled load doesn't appear loaded", function() {
   expect(2);
   stop();
   setTimeout(function() {
-    equals(CGD.mod.files['reloadparent/parent.js'].readyState, 'loaded');
+    equals(CGD.mod.files['reloadparent/parent.js'].status(), 'loaded');
     start();
   }, 100);
 });
