@@ -15,6 +15,36 @@ CGD.JS = CGD.JS || {};
     }
   }
 
+  CGD.html = CGD.html || {};
+
+  CGD.html.makeTag = function(tag, attributes) {
+    var element = document.createElement(tag);
+    for (var a in attributes) {
+      if (attributes.hasOwnProperty(a)) {
+        element.setAttribute(a, attributes[a]);
+      }
+    }
+    return element;
+  };
+
+  CGD.html.addElementToHead = function(element) {
+    document.getElementsByTagName('head')[0].appendChild(element);
+  };
+
+  CGD.html.findMe = function(tag, attr, file) {
+    var tags = document.getElementsByTagName(tag);
+    if (file[0] == '/') {
+      var r = new RegExp(file + '$');
+    } else {
+      var r = new RegExp('/' + file + '$');
+    }
+    for (var i = 0;i < tags.length;i++) {
+      if (r.exec(tags[i][attr])) {
+        return tags[i][attr];
+      }
+    }
+  };
+
   CGD.Dependency = function(path, fullPath) {
     this.path = path;
     this.canonicalPath = fullPath || path;
@@ -183,36 +213,6 @@ CGD.JS = CGD.JS || {};
       return true;
     } else {
       return window_onerror(message, url, line);
-    }
-  };
-
-  CGD.html = CGD.html || {};
-
-  CGD.html.makeTag = function(tag, attributes) {
-    var element = document.createElement(tag);
-    for (var a in attributes) {
-      if (attributes.hasOwnProperty(a)) {
-        element.setAttribute(a, attributes[a]);
-      }
-    }
-    return element;
-  };
-
-  CGD.html.addElementToHead = function(element) {
-    document.getElementsByTagName('head')[0].appendChild(element);
-  };
-
-  CGD.html.findMe = function(tag, attr, file) {
-    var tags = document.getElementsByTagName(tag);
-    if (file[0] == '/') {
-      var r = new RegExp(file + '$');
-    } else {
-      var r = new RegExp('/' + file + '$');
-    }
-    for (var i = 0;i < tags.length;i++) {
-      if (r.exec(tags[i][attr])) {
-        return tags[i][attr];
-      }
     }
   };
 

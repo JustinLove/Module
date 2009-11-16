@@ -14,6 +14,18 @@
 
   <script>
 
+module("html");
+
+test("makes elements", function() {
+  ok(CGD.html.makeTag('foo', {bar: 'bar'}));
+});
+
+test("adds an element to head", function() {
+  CGD.html.addElementToHead(CGD.html.makeTag('foo', {bar: 'bar'}));
+  equals(document.getElementsByTagName('foo').length, 1);
+});
+
+
 module("Dependency");
 
 test("Can construct a dependency", function() {
@@ -54,15 +66,6 @@ test("can track whether it's aborted", function() {
 test("infer file type", function() {
   equals(new CGD.Dependency('type.js').type, 'text/javascript');
   equals(new CGD.Dependency('type.css').type, 'text/css');
-});
-
-test("makes elements", function() {
-  ok(CGD.html.makeTag('foo', {bar: 'bar'}));
-});
-
-test("adds an element to head", function() {
-  CGD.html.addElementToHead(CGD.html.makeTag('foo', {bar: 'bar'}));
-  equals(document.getElementsByTagName('foo').length, 1);
 });
 
 test("makes matching element", function() {
