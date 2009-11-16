@@ -41,7 +41,6 @@ CGD.JS = CGD.JS || {};
       return this;
     },
     onloadFactory: function() {
-      var file = this;
       var load = this.load = {status: 'pending'};
       return function() {
         switch (this.readyState) {
