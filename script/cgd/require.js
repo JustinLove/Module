@@ -115,6 +115,12 @@ CGD.JS = CGD.JS || {};
         }
       }
     },
+    fileFromPath: function(path, type) {
+      var file = this.files[path] || new CGD.Dependency(path, this.root + path);
+      var element = file.element(type);
+      file = this.files[file.canonicalPath] || file;
+      return {file: file, element: element};
+    },
     once: function(path) {
       if (this.files[path]) {
         return null;

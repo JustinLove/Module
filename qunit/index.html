@@ -136,6 +136,13 @@ test("handles base directory module", function() {
   setTimeout(start, 100);
 });
 
+test("loaded files are known", function() {
+  CGD.mod.require('loadme.js');
+  
+  ok(CGD.mod.fileFromPath('loadme.js').file);
+  ok(CGD.mod.fileFromPath('loadme.js').element);
+});
+
 test("file state changes from unloaded to loaded", function() {
   CGD.mod.require('loadme.js');
   
