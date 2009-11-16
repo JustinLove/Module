@@ -82,7 +82,7 @@ CGD.JS = CGD.JS || {};
     f(this);
     if (this.queued > 0) {
       this.files[file].aborted();
-      this.require(path == '.' ? file : file.slice(path.length + 1));
+      this.require(file.slice(path.length));
       throw new require.DependenciesNotYetLoaded;
     }
   };
@@ -93,8 +93,8 @@ CGD.JS = CGD.JS || {};
     files: {}, // typically shared by all instances
     constructor: CGD.Module,
     cd: function(path) {
-      if (path != '.') {
-        this.path += path + '/';
+      if (path != './') {
+        this.path += path;
       }
     },
     under: function(path, f) {
@@ -202,9 +202,9 @@ CGD.JS = CGD.JS || {};
   require.pathTo = function(file) {
     var slash = file.lastIndexOf('/');
     if (slash >= 1) {
-      return file.slice(0,slash);
+      return file.slice(0, slash+1);
     } else {
-      return ".";
+      return '';
     }
   };
   
@@ -223,7 +223,7 @@ CGD.JS = CGD.JS || {};
   };
 
   CGD.mod = new CGD.Module('require.js', function(m){
-    m.root = require.pathTo(window.location.toString()) + '/';
+    m.root = require.pathTo(window.location.toString());
     m.alreadyNamed('script', 'src');
     m.alreadyNamed('link', 'href');
   });
