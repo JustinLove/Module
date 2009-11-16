@@ -221,6 +221,13 @@ test("out-of-order mutual dependencies", function() {
   setTimeout(start, 100);
 });
 
+test("distant modules", function() {
+  expect(3);
+  stop();
+  CGD.mod.require('../distant/distantmodule.js');
+  setTimeout(start, 100);
+});
+
   </script>
   
 </head>

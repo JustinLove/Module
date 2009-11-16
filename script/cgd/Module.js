@@ -121,7 +121,7 @@ CGD.god = window;
     this.cd(path);
     f(this);
     if (this.queued > 0) {
-      this.files[file].aborted();
+      this.files[fullPath].aborted();
       this.require(file.slice(path.length));
       throw new CGD.Module.DependenciesNotYetLoaded;
     }
