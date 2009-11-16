@@ -92,7 +92,7 @@ CGD.JS = CGD.JS || {};
     if (this.queued > 0) {
       this.files[file].aborted();
       this.require(file.slice(path.length));
-      throw new require.DependenciesNotYetLoaded;
+      throw new CGD.Module.DependenciesNotYetLoaded;
     }
   };
   
@@ -160,6 +160,21 @@ CGD.JS = CGD.JS || {};
     }
   };
 
+  CGD.Module.DependenciesNotYetLoaded = function() {};
+  var dnyl = CGD.Module.DependenciesNotYetLoaded.prototype;
+  dnyl.name = "DependenciesNotYetLoaded";
+  dnyl.message = "Not all dependencies loaded; file will be retried later.";
+  dnyl.toString = function() {return this.name + ": " + this.message;};
+
+  var window_onerror = window.onerror;
+  window.onerror = CGD.Module.onerror = function(message, url, line)  {
+    if (message.match(dnyl.name)) {
+      return true;
+    } else {
+      return window_onerror(message, url, line);
+    }
+  };
+
   var require = CGD.JS.require = {};
   CGD.html = CGD.html || {};
 
@@ -177,21 +192,6 @@ CGD.JS = CGD.JS || {};
     document.getElementsByTagName('head')[0].appendChild(element);
   };
 
-  require.DependenciesNotYetLoaded = function() {};
-  var dnyl = require.DependenciesNotYetLoaded.prototype;
-  dnyl.name = "DependenciesNotYetLoaded";
-  dnyl.message = "Not all dependencies loaded; file will be retried later.";
-  dnyl.toString = function() {return this.name + ": " + this.message;};
-  
-  var window_onerror = window.onerror;
-  window.onerror = require.onerror = function(message, url, line)  {
-    if (message.match(dnyl.name)) {
-      return true;
-    } else {
-      return window_onerror(message, url, line);
-    }
-  };
-  
   require.pathTo = function(file) {
     var slash = file.lastIndexOf('/');
     if (slash >= 1) {
