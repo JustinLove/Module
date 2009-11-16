@@ -6,7 +6,6 @@ var CGD = window.CGD || {};
 // Global Object Definitions ;^)
 CGD.god = window;
 
-CGD.JS = CGD.JS || {};
 (function() {
 
   function D(args) {
