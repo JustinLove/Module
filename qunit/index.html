@@ -44,6 +44,13 @@ test("can track whether it's loaded", function() {
   equals(x.status(), 'loaded');
 });
 
+test("can track whether it's aborted", function() {
+  var x = new CGD.Dependency('x.js');
+  equals(x.status(), 'new');
+  x.aborted();
+  equals(x.status(), 'aborted');
+});
+
 test("infer file type", function() {
   equals(new CGD.Dependency('type.js').type, 'text/javascript');
   equals(new CGD.Dependency('type.css').type, 'text/css');

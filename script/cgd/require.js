@@ -36,6 +36,10 @@ CGD.JS = CGD.JS || {};
       this.load.status = 'loaded';
       return this;
     },
+    aborted: function() {
+      this.load = {status: 'aborted'};
+      return this;
+    },
     onloadFactory: function() {
       var file = this;
       var load = this.load = {status: 'pending'};
@@ -107,6 +111,7 @@ CGD.JS = CGD.JS || {};
       var x = this.fileFromPath(this.path + filename);
       switch (x.file.status()) {
         case 'new':
+        case 'aborted':
           x.file.register(this.files);
           x.element.onload = x.element.onreadystatechange = x.file.onloadFactory();
           require.addElementToHead(x.element);
