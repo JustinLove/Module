@@ -69,6 +69,13 @@ test("makes matching element", function() {
   ok(new CGD.Dependency('el.js').element());
 });
 
+test("includes a file", function() {
+  expect(1);
+  stop();
+  new CGD.Dependency('pass.js').include();
+  setTimeout(start, 100);
+});
+
 test("improves canonicalPath", function() {
   file = new CGD.Dependency('subdir/../el.js');
   file.element();

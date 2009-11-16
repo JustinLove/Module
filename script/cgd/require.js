@@ -67,6 +67,9 @@ CGD.JS = CGD.JS || {};
         default:
           throw "Don't know how to include " + type;
       }
+    },
+    include: function(type) {
+      require.addElementToHead(this.element(type));
     }
   };
 
@@ -153,11 +156,7 @@ CGD.JS = CGD.JS || {};
   CGD.JS.require = require;
 
   require.include = function(file, type) {
-    if (typeof(file) == 'string') {
-      file = new CGD.Dependency(file);
-    }
-    var element = file.element(type);
-    require.addElementToHead(element);
+    new CGD.Dependency(file).include(type);
   };
 
   require.guessFileType = function(path) {
