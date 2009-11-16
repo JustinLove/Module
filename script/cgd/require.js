@@ -82,7 +82,7 @@ CGD.JS = CGD.JS || {};
 
   CGD.Module = function(file, f) {
     var path = CGD.Module.pathTo(file);
-    var fullPath = require.findMe('script', 'src', file);
+    var fullPath = CGD.html.findMe('script', 'src', file);
     this.queued = 0;
     if (fullPath) {
       this.root = fullPath.slice(0, -file.length);
@@ -201,7 +201,7 @@ CGD.JS = CGD.JS || {};
     document.getElementsByTagName('head')[0].appendChild(element);
   };
 
-  require.findMe = function(tag, attr, file) {
+  CGD.html.findMe = function(tag, attr, file) {
     var tags = document.getElementsByTagName(tag);
     if (file[0] == '/') {
       var r = new RegExp(file + '$');
