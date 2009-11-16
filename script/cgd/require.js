@@ -104,15 +104,19 @@ CGD.JS = CGD.JS || {};
       return new F();
     },
     require: function(filename, type) {
-      var file = this.once(this.path + filename);
-      if (file) {
-        var element = file.element(type);
-        if (!this.files[file.canonicalPath]) {
-          file.register(this.files);
+      var x = this.fileFromPath(this.path + filename);
+      switch (x.file.status()) {
+        case 'new':
+          x.file.register(this.files);
+          x.element.onload = x.element.onreadystatechange = x.file.onloadFactory();
+          require.addElementToHead(x.element);
           this.queued++;
-          element.onload = element.onreadystatechange = file.onloadFactory();
-          require.addElementToHead(element);
-        }
+          break;
+        case 'pending':
+          this.queued++;
+          break;
+        case 'loaded': break;
+        default: throw "unknown file status"; break;
       }
     },
     fileFromPath: function(path, type) {
