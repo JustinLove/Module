@@ -114,6 +114,23 @@ test("includes a file twice", function() {
   setTimeout(start, 100);
 });
 
+test("detects static script files", function() {
+  for (var i in CGD.mod.files) {
+    if (CGD.mod.files[i].canonicalPath.match(/qunit.js/)) {
+      ok(true, 'found static file');
+      return;
+    }
+  }
+  ok(false, 'did not find static file');
+});
+
+test("require includes a file only once", function() {
+  expect(0);
+  stop();
+  CGD.mod.require('fail.js');
+  setTimeout(start, 100);
+});
+
 test("relative path context", function() {
   new CGD.Module("dummy.js", function(mod){
     ok(!mod.path.match('subdir'), 'subdir not previously in path');
@@ -198,25 +215,6 @@ test("out-of-order mutual dependencies", function() {
   expect(3);
   stop();
   CGD.mod.require('conflict/top.js');
-  setTimeout(start, 100);
-});
-
-module("require");
-
-test("detects static script files", function() {
-  for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].canonicalPath.match(/qunit.js/)) {
-      ok(true, 'found static file');
-      return;
-    }
-  }
-  ok(false, 'did not find static file');
-});
-
-test("require includes a file only once", function() {
-  expect(0);
-  stop();
-  CGD.mod.require('fail.js');
   setTimeout(start, 100);
 });
 
