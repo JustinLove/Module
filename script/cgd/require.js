@@ -22,7 +22,7 @@ CGD.JS = CGD.JS || {};
   };
 
   CGD.Dependency.prototype = {
-    readyState: 'pending',
+    readyState: 'new',
     constructor: CGD.Dependency,
     register: function(files) {
       files[this.path] = this;

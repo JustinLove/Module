@@ -39,7 +39,7 @@ test("registers itself", function() {
 
 test("can track whether it's loaded", function() {
   var x = new CGD.Dependency('x.js');
-  ok(x.readyState != 'loaded', 'not loaded before');
+  equals(x.readyState, 'new');
   x.load();
   equals(x.readyState, 'loaded');
 });
@@ -139,7 +139,7 @@ test("handles base directory module", function() {
 test("file state changes from unloaded to loaded", function() {
   CGD.mod.require('loadme.js');
   
-  ok(CGD.mod.files['loadme.js'].readyState != 'loaded', 'not loaded before');
+  equals(CGD.mod.files['loadme.js'].readyState, 'new');
   stop();
   setTimeout(function() {
     equals(CGD.mod.files['loadme.js'].readyState, 'loaded');
