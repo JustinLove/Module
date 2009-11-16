@@ -53,17 +53,17 @@ CGD.JS = CGD.JS || {};
         }
       };
     },
-    element: function(type) {
-      var inferredType = type || this.type;
-      switch (inferredType) {
+    element: function(overrideType) {
+      var type = overrideType || this.type;
+      switch (type) {
         case 'text/javascript':
           var element = CGD.html.makeTag('script',
-            {src: this.canonicalPath, type: inferredType, language: 'javascript'});
+            {src: this.canonicalPath, type: type, language: 'javascript'});
           this.canonicalPath = element.src;
           return element;
         case 'text/css':
           var element = CGD.html.makeTag('link', 
-            {href: this.canonicalPath, type: inferredType, rel: 'stylesheet'});
+            {href: this.canonicalPath, type: type, rel: 'stylesheet'});
           this.canonicalPath = element.href;
           return element;
         default:
