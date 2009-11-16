@@ -184,7 +184,6 @@ CGD.JS = CGD.JS || {};
     }
   };
 
-  var require = CGD.JS.require = {};
   CGD.html = CGD.html || {};
 
   CGD.html.makeTag = function(tag, attributes) {
