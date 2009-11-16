@@ -57,11 +57,11 @@ CGD.JS = CGD.JS || {};
       var inferredType = type || this.type;
       switch (inferredType) {
         case 'text/javascript':
-          var element = require.makeTag('script', {src: this.canonicalPath, type: inferredType, language: 'javascript'});
+          var element = CGD.html.makeTag('script', {src: this.canonicalPath, type: inferredType, language: 'javascript'});
           this.canonicalPath = element.src;
           return element;
         case 'text/css':
-          var element = require.makeTag('link', {href: this.canonicalPath, type: inferredType, rel: 'stylesheet'});
+          var element = CGD.html.makeTag('link', {href: this.canonicalPath, type: inferredType, rel: 'stylesheet'});
           this.canonicalPath = element.href;
           return element;
         default:
@@ -69,7 +69,7 @@ CGD.JS = CGD.JS || {};
       }
     },
     include: function(type) {
-      require.addElementToHead(this.element(type));
+      CGD.html.addElementToHead(this.element(type));
     }
   };
 
@@ -125,7 +125,7 @@ CGD.JS = CGD.JS || {};
         case 'aborted':
           x.file.register(this.files);
           x.element.onload = x.element.onreadystatechange = x.file.onloadFactory();
-          require.addElementToHead(x.element);
+          CGD.html.addElementToHead(x.element);
           this.queued++;
           break;
         case 'pending':
@@ -161,8 +161,9 @@ CGD.JS = CGD.JS || {};
   };
 
   var require = CGD.JS.require = {};
+  CGD.html = CGD.html || {};
 
-  require.makeTag = function(tag, attributes) {
+  CGD.html.makeTag = function(tag, attributes) {
     var element = document.createElement(tag);
     for (var a in attributes) {
       if (attributes.hasOwnProperty(a)) {
@@ -172,7 +173,7 @@ CGD.JS = CGD.JS || {};
     return element;
   };
 
-  require.addElementToHead = function(element) {
+  CGD.html.addElementToHead = function(element) {
     document.getElementsByTagName('head')[0].appendChild(element);
   };
 
