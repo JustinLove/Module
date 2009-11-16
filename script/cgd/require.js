@@ -93,9 +93,7 @@ CGD.JS = CGD.JS || {};
     files: {}, // typically shared by all instances
     constructor: CGD.Module,
     cd: function(path) {
-      if (path != './') {
-        this.path += path;
-      }
+      this.path += path;
     },
     under: function(path, f) {
       var m = this.beget();
