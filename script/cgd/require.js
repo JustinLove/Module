@@ -95,7 +95,7 @@ CGD.JS = CGD.JS || {};
       throw new CGD.Module.DependenciesNotYetLoaded;
     }
   };
-  
+
   CGD.Module.prototype = {
     path: '',
     root: '',
@@ -219,5 +219,4 @@ CGD.JS = CGD.JS || {};
     m.alreadyNamed('script', 'src');
     m.alreadyNamed('link', 'href');
   });
-  
 }());
