@@ -81,7 +81,7 @@ CGD.JS = CGD.JS || {};
   };
 
   CGD.Module = function(file, f) {
-    var path = require.pathTo(file);
+    var path = CGD.Module.pathTo(file);
     var fullPath = require.findMe('script', 'src', file);
     this.queued = 0;
     if (fullPath) {
@@ -160,6 +160,15 @@ CGD.JS = CGD.JS || {};
     }
   };
 
+  CGD.Module.pathTo = function(file) {
+    var slash = file.lastIndexOf('/');
+    if (slash >= 1) {
+      return file.slice(0, slash+1);
+    } else {
+      return '';
+    }
+  };
+
   CGD.Module.DependenciesNotYetLoaded = function() {};
   var dnyl = CGD.Module.DependenciesNotYetLoaded.prototype;
   dnyl.name = "DependenciesNotYetLoaded";
@@ -192,15 +201,6 @@ CGD.JS = CGD.JS || {};
     document.getElementsByTagName('head')[0].appendChild(element);
   };
 
-  require.pathTo = function(file) {
-    var slash = file.lastIndexOf('/');
-    if (slash >= 1) {
-      return file.slice(0, slash+1);
-    } else {
-      return '';
-    }
-  };
-  
   require.findMe = function(tag, attr, file) {
     var tags = document.getElementsByTagName(tag);
     if (file[0] == '/') {
@@ -216,7 +216,7 @@ CGD.JS = CGD.JS || {};
   };
 
   CGD.mod = new CGD.Module('require.js', function(m){
-    m.root = require.pathTo(window.location.toString());
+    m.root = CGD.Module.pathTo(window.location.toString());
     m.alreadyNamed('script', 'src');
     m.alreadyNamed('link', 'href');
   });
