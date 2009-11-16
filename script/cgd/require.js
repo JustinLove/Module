@@ -19,10 +19,10 @@ CGD.JS = CGD.JS || {};
     this.path = path;
     this.canonicalPath = fullPath || path;
     this.type = require.guessFileType(this.path);
+    this.load = {status: 'new'};
   };
 
   CGD.Dependency.prototype = {
-    readyState: 'new',
     constructor: CGD.Dependency,
     register: function(files) {
       files[this.path] = this;
@@ -30,20 +30,21 @@ CGD.JS = CGD.JS || {};
       return this;
     },
     status: function() {
-      return this.readyState;
+      return this.load.status;
     },
     loaded: function() {
-      this.readyState = 'loaded';
+      this.load.status = 'loaded';
       return this;
     },
     onloadFactory: function() {
       var file = this;
+      var load = this.load = {status: 'pending'};
       return function() {
         switch (this.readyState) {
           case undefined:
           case 'loaded':
           case 'complete':
-            file.loaded();
+            load.status = 'loaded';
             break;
           default: break;
         }
@@ -108,7 +109,6 @@ CGD.JS = CGD.JS || {};
         var element = file.element(type);
         if (!this.files[file.canonicalPath]) {
           file.register(this.files);
-          file.readyState = 'pending';
           this.queued++;
           element.onload = element.onreadystatechange = file.onloadFactory();
           require.addElementToHead(element);
