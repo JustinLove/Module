@@ -81,7 +81,8 @@ CGD.JS = CGD.JS || {};
     this.cd(path);
     f(this);
     if (this.queued > 0) {
-      require.include(file);
+      this.files[file].aborted();
+      this.require(path == '.' ? file : file.slice(path.length + 1));
       throw new require.DependenciesNotYetLoaded;
     }
   };
