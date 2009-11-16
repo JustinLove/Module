@@ -18,7 +18,7 @@ CGD.JS = CGD.JS || {};
   CGD.Dependency = function(path, fullPath) {
     this.path = path;
     this.canonicalPath = fullPath || path;
-    this.type = require.guessFileType(this.path);
+    this.type = CGD.Dependency.guessFileType(this.path);
     this.load = {status: 'new'};
   };
 
@@ -71,6 +71,13 @@ CGD.JS = CGD.JS || {};
     include: function(type) {
       require.addElementToHead(this.element(type));
     }
+  };
+
+  CGD.Dependency.guessFileType = function(path) {
+    return {
+      'js': 'text/javascript',
+      'css': 'text/css'
+    }[path.match(/\.(\w*)$/)[1]];
   };
 
   CGD.Module = function(file, f) {
@@ -154,13 +161,6 @@ CGD.JS = CGD.JS || {};
   };
 
   var require = CGD.JS.require = {};
-
-  require.guessFileType = function(path) {
-    return {
-      'js': 'text/javascript',
-      'css': 'text/css'
-    }[path.match(/\.(\w*)$/)[1]];
-  };
 
   require.makeTag = function(tag, attributes) {
     var element = document.createElement(tag);
