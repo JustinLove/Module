@@ -57,11 +57,13 @@ CGD.JS = CGD.JS || {};
       var inferredType = type || this.type;
       switch (inferredType) {
         case 'text/javascript':
-          var element = CGD.html.makeTag('script', {src: this.canonicalPath, type: inferredType, language: 'javascript'});
+          var element = CGD.html.makeTag('script',
+            {src: this.canonicalPath, type: inferredType, language: 'javascript'});
           this.canonicalPath = element.src;
           return element;
         case 'text/css':
-          var element = CGD.html.makeTag('link', {href: this.canonicalPath, type: inferredType, rel: 'stylesheet'});
+          var element = CGD.html.makeTag('link', 
+            {href: this.canonicalPath, type: inferredType, rel: 'stylesheet'});
           this.canonicalPath = element.href;
           return element;
         default:
