@@ -153,10 +153,7 @@ CGD.JS = CGD.JS || {};
     }
   };
 
-  function require(filename, type) {
-    CGD.mod.require(filename, type);
-  }
-  CGD.JS.require = require;
+  var require = CGD.JS.require = {};
 
   require.guessFileType = function(path) {
     return {
