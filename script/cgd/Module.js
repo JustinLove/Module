@@ -172,13 +172,6 @@ CGD.god = window;
       file = this.files[file.canonicalPath] || file;
       return {file: file, element: element};
     },
-    once: function(path) {
-      if (this.files[path]) {
-        return null;
-      } else {
-        return new CGD.Dependency(path, this.root + path);
-      }
-    },
     alreadyNamed: function(tag, attr) {
       var tags = document.getElementsByTagName(tag);
       for (var i = 0;i < tags.length;i++) {
