@@ -139,7 +139,7 @@ test("handles base directory module", function() {
 test("file state changes from unloaded to loaded", function() {
   CGD.mod.require('loadme.js');
   
-  equals(CGD.mod.files['loadme.js'].readyState, 'new');
+  equals(CGD.mod.files['loadme.js'].readyState, 'pending');
   stop();
   setTimeout(function() {
     equals(CGD.mod.files['loadme.js'].readyState, 'loaded');

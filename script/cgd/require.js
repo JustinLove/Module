@@ -105,6 +105,7 @@ CGD.JS = CGD.JS || {};
         var element = file.element(type);
         if (!this.files[file.canonicalPath]) {
           file.register(this.files);
+          file.readyState = 'pending';
           this.queued++;
           element.onload = element.onreadystatechange = file.onloadFactory();
           require.addElementToHead(element);
