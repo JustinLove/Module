@@ -32,7 +32,7 @@ CGD.JS = CGD.JS || {};
     status: function() {
       return this.readyState;
     },
-    load: function() {
+    loaded: function() {
       this.readyState = 'loaded';
       return this;
     },
@@ -43,7 +43,7 @@ CGD.JS = CGD.JS || {};
           case undefined:
           case 'loaded':
           case 'complete':
-            file.load();
+            file.loaded();
             break;
           default: break;
         }
@@ -128,7 +128,7 @@ CGD.JS = CGD.JS || {};
         var fullPath = tags[i][attr];
         if (fullPath.indexOf(this.root) == 0) {
           var relativePath = fullPath.substr(this.root.length);
-          new CGD.Dependency(relativePath, fullPath).register(this.files).load();
+          new CGD.Dependency(relativePath, fullPath).register(this.files).loaded();
         }
       }
     }

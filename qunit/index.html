@@ -40,7 +40,7 @@ test("registers itself", function() {
 test("can track whether it's loaded", function() {
   var x = new CGD.Dependency('x.js');
   equals(x.status(), 'new');
-  x.load();
+  x.loaded();
   equals(x.status(), 'loaded');
 });
 
