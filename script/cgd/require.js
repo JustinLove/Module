@@ -108,6 +108,9 @@ CGD.JS = CGD.JS || {};
       F.prototype = this;
       return new F();
     },
+    include: function(file, type) {
+      new CGD.Dependency(file).include(type);
+    },
     require: function(filename, type) {
       var x = this.fileFromPath(this.path + filename);
       switch (x.file.status()) {
@@ -154,10 +157,6 @@ CGD.JS = CGD.JS || {};
     CGD.mod.require(filename, type);
   }
   CGD.JS.require = require;
-
-  require.include = function(file, type) {
-    new CGD.Dependency(file).include(type);
-  };
 
   require.guessFileType = function(path) {
     return {

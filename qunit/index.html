@@ -99,6 +99,21 @@ test("construct a module", function() {
   });
 });
 
+test("includes a file", function() {
+  expect(1);
+  stop();
+  CGD.mod.include('pass.js');
+  setTimeout(start, 100);
+});
+
+test("includes a file twice", function() {
+  expect(2);
+  stop();
+  CGD.mod.include('pass.js');
+  CGD.mod.include('pass.js');
+  setTimeout(start, 100);
+});
+
 test("relative path context", function() {
   new CGD.Module("dummy.js", function(mod){
     ok(!mod.path.match('subdir'), 'subdir not previously in path');
@@ -187,21 +202,6 @@ test("out-of-order mutual dependencies", function() {
 });
 
 module("require");
-
-test("includes a file", function() {
-  expect(1);
-  stop();
-  CGD.JS.require.include('pass.js');
-  setTimeout(start, 100);
-});
-
-test("includes a file twice", function() {
-  expect(2);
-  stop();
-  CGD.JS.require.include('pass.js');
-  CGD.JS.require.include('pass.js');
-  setTimeout(start, 100);
-});
 
 test("detects static script files", function() {
   for (var i in CGD.mod.files) {
