@@ -15,7 +15,7 @@
   <script>
 
 CGD.test = CGD.test || {};
-CGD.test.timeout = 500;
+CGD.test.timeout = isLocal ? 50 : 500;
 
 module("html");
 
