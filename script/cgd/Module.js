@@ -199,7 +199,7 @@ CGD.god = window;
   dnyl.message = "Not all dependencies loaded; file will be retried later.";
   dnyl.toString = function() {return this.name + ": " + this.message;};
 
-  var window_onerror = window.onerror;
+  var window_onerror = window.onerror || function() {return false;};
   window.onerror = CGD.Module.onerror = function(message, url, line)  {
     if (message.match(dnyl.name)) {
       return true;
