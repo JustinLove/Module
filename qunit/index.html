@@ -147,6 +147,26 @@ test("relative path context", function() {
   });
 });
 
+test("relative path context doesn't double queued count", function() {
+  try {
+    new CGD.Module("noop.js", function(mod) {
+      equals(mod.queued, 0);
+      mod.require('dummychild.js');
+      equals(mod.queued, 1);
+      mod.under('subdir/', function(m) {
+        equals(m.queued, 0);
+        m.require('dummysubchild.js');
+        equals(m.queued, 1);
+      });
+      equals(mod.queued, 2);
+    });
+  } catch(e) {
+    if (!(e instanceof CGD.Module.DependenciesNotYetLoaded)) {
+      throw e;
+    }
+  }
+});
+
 test("absolute path context", function() {
   ok(!CGD.mod.path.match('subdir'), 'subdir not previously in path');
   new CGD.Module('subdir/subpass.js', function(m) {
