@@ -251,6 +251,13 @@ test("distant modules", function() {
   setTimeout(start, CGD.test.timeout);
 });
 
+test("prevents infinite reload", function() {
+  expect(0);
+  CGD.mod.require('infinite.js');
+  stop();
+  setTimeout(start, 1000);
+});
+
   </script>
   
 </head>

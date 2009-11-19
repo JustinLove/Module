@@ -160,6 +160,10 @@ CGD.god = window;
           this.queued++;
           break;
         case 'pending':
+          x.file.count = (x.file.count || 0) + 1;
+          if (x.file.count > 20) {
+            throw new CGD.Module.UnmetDependency(x.file.canonicalPath);
+          }
           this.queued++;
           break;
         case 'loaded': break;
@@ -198,6 +202,11 @@ CGD.god = window;
   dnyl.name = "DependenciesNotYetLoaded";
   dnyl.message = "Not all dependencies loaded; file will be retried later.";
   dnyl.toString = function() {return this.name + ": " + this.message;};
+
+  CGD.Module.UnmetDependency = function(file) {this.message = file + " could not be loaded";};
+  var unmet = CGD.Module.UnmetDependency.prototype;
+  unmet.name = "UnmetDependency";
+  unmet.toString = function() {return this.name + ": " + this.message;};
 
   var window_onerror = window.onerror || function() {return false;};
   window.onerror = CGD.Module.onerror = function(message, url, line)  {
