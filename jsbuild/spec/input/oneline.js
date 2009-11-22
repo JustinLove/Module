@@ -1,0 +1,1 @@
+new CGD.Module('oneline.js', function(m) {});
