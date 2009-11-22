@@ -11,6 +11,10 @@ describe JS::Build do
     file_contents(output).should == file_contents(input)
   end
 
+  def expected_contents(filename)
+    compare_files(file('spec/expected/' + filename), file('spec/output/' + filename))
+  end
+
   it "passes simple files through unaffected" do
     JS::Build.build(file('spec/input/simple.js'), file('spec/output/simple-built.js'))
     compare_files(file('spec/input/simple.js'), file('spec/output/simple-built.js'))
@@ -18,6 +22,6 @@ describe JS::Build do
 
   it "removes single-line modules" do
     JS::Build.build(file('spec/input/oneline.js'), file('spec/output/oneline-built.js'))
-    compare_files(file('spec/expected/oneline-built.js'), file('spec/output/oneline-built.js'))
+    expected_contents('oneline-built.js')
   end
 end
