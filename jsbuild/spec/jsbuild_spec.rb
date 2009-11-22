@@ -15,13 +15,17 @@ describe JS::Build do
     compare_files(file('spec/expected/' + filename), file('spec/output/' + filename))
   end
 
+  def io_pair(filename)
+    [file('spec/input/' + filename), file('spec/output/' + filename.sub('.js', '-built.js'))]
+  end
+
   it "passes simple files through unaffected" do
-    JS::Build.build(file('spec/input/simple.js'), file('spec/output/simple-built.js'))
-    compare_files(file('spec/input/simple.js'), file('spec/output/simple-built.js'))
+    JS::Build.build(*io_pair('simple.js'))
+    compare_files(*io_pair('simple.js'))
   end
 
   it "removes single-line modules" do
-    JS::Build.build(file('spec/input/oneline.js'), file('spec/output/oneline-built.js'))
+    JS::Build.build(*io_pair('oneline.js'))
     expected_contents('oneline-built.js')
   end
 end
