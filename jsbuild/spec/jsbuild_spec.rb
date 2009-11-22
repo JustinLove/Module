@@ -19,6 +19,10 @@ describe JS::Build do
     [file('spec/input/' + filename), file('spec/output/' + filename.sub('.js', '-built.js'))]
   end
 
+  before(:all) do
+    FileUtils.rm Dir.glob file('spec/output/*.js');
+  end
+
   it "passes simple files through unaffected" do
     JS::Build.build(*io_pair('simple.js'))
     compare_files(*io_pair('simple.js'))
