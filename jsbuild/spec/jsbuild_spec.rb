@@ -4,7 +4,7 @@ libs %w{jsbuild}
 describe JS::Build do
 
   def file_contents(file)
-    File.open(file) {|f| f.readlines.join('\n')}
+    File.open(file) {|f| f.readlines.join}
   end
 
   def compare_files(input, output)
@@ -31,5 +31,10 @@ describe JS::Build do
   it "removes single-line modules" do
     JS::Build.build(*io_pair('oneline.js'))
     expected_contents('oneline-built.js')
+  end
+
+  it "removes multi-line modules" do
+    JS::Build.build(*io_pair('multiline.js'))
+    expected_contents('multiline-built.js')
   end
 end

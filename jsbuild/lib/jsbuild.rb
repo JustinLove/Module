@@ -3,9 +3,7 @@ module JS
     def self.build(input, output)
       File.open(output, 'w') do |fout|
         File.open(input, 'r') do |fin|
-          fin.each_line do |l|
-            fout << l unless l.match('CGD.Module');
-          end
+          fout << fin.readlines.join.gsub(/new CGD.Module.*\);/m, '')
         end
       end
     end
