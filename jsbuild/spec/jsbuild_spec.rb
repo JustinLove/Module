@@ -19,27 +19,32 @@ describe JS::Build do
     [file('spec/input/' + filename), file('spec/output/' + filename.sub('.js', '-built.js'))]
   end
 
+  def build(filename)
+    io = io_pair(filename)
+    JS::Build.build(*io)
+  end
+
   before(:all) do
     FileUtils.rm Dir.glob file('spec/output/*.js');
   end
 
   it "passes simple files through unaffected" do
-    JS::Build.build(*io_pair('simple.js'))
+    build('simple.js')
     compare_files(*io_pair('simple.js'))
   end
 
   it "removes multi-line modules" do
-    JS::Build.build(*io_pair('multiline.js'))
+    build('multiline.js')
     expected_contents('multiline-built.js')
   end
 
   it "leaves remaining code alone" do
-    JS::Build.build(*io_pair('codeafter.js'))
+    build('codeafter.js')
     expected_contents('codeafter-built.js')
   end
   
   it "inlines requirements" do
-    JS::Build.build(*io_pair('require-simple.js'))
+    build('require-simple.js')
     expected_contents('require-simple-built.js')
   end
 end
