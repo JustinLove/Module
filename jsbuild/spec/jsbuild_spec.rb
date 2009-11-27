@@ -58,7 +58,6 @@ describe JS::Module do
 
   it "detects malformed block" do
     @input = StringIO.new(")}", 'r')
-    lambda {raise}.should raise_error
     lambda {JS::Module.new(@input, @output)}.should raise_error
   end
 
