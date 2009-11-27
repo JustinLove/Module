@@ -24,6 +24,11 @@ describe JS::Build do
     JS::Build.build(*io)
   end
 
+  def run(filename)
+    build(filename)
+    expected_contents(filename.sub(/\.js$/, '-built.js'))
+  end
+
   before(:all) do
     FileUtils.rm Dir.glob file('spec/output/*.js');
   end
@@ -34,18 +39,15 @@ describe JS::Build do
   end
 
   it "removes multi-line modules" do
-    build('multiline.js')
-    expected_contents('multiline-built.js')
+    run('multiline.js')
   end
 
   it "leaves remaining code alone" do
-    build('codeafter.js')
-    expected_contents('codeafter-built.js')
+    run('codeafter.js')
   end
   
   it "inlines requirements" do
-    build('require-simple.js')
-    expected_contents('require-simple-built.js')
+    run('require-simple.js')
   end
 end
 
