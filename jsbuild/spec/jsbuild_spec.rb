@@ -41,11 +41,18 @@ end
 
 describe JS::Module do
   it "parses until end of block" do
-    @input = StringIO.new(")};", 'r')
+    @input = StringIO.new("});", 'r')
     @output = StringIO.new("", 'w')
     JS::Module.new(@input, @output)
     @input.should be_eof
     @output.string.should == ""
+  end
+
+  it "detects malformed block" do
+    @input = StringIO.new(")}", 'r')
+    @output = StringIO.new("", 'w')
+    lambda {raise}.should raise_error
+    lambda {JS::Module.new(@input, @output)}.should raise_error
   end
 
   it "consumes stuff inside block" do

@@ -17,10 +17,11 @@ module JS
   class Module
     def initialize(input, output)
       input.each_line do |l|
-        if (l.match(/\}\)\;/))
+        if (l.include?('});'))
           return
         end
       end
+      raise "unterminated module" if input.eof
     end
   end
 end
