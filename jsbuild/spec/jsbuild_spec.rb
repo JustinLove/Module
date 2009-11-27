@@ -123,5 +123,9 @@ describe JS::Dependency do
     it "inlines requirements" do
       run('require-simple.js')
     end
+
+    it "inlines sub requirements" do
+      run('require-require.js')
+    end
   end
 end
