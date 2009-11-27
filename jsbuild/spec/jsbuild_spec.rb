@@ -37,6 +37,11 @@ describe JS::Build do
     JS::Build.build(*io_pair('codeafter.js'))
     expected_contents('codeafter-built.js')
   end
+  
+  it "inlines requirements" do pending do
+    JS::Build.build(*io_pair('require-simple.js'))
+    expected_contents('require-simple-built.js')
+  end end
 end
 
 describe JS::Module do
@@ -53,6 +58,20 @@ describe JS::Module do
     @output = StringIO.new("", 'w')
     lambda {raise}.should raise_error
     lambda {JS::Module.new(@input, @output)}.should raise_error
+  end
+
+  it "copies streams" do
+    @input = StringIO.new("});", 'r')
+    @output = StringIO.new("", 'w')
+    JS::Module.new(@input, @output).copy_stream(StringIO.new("var blarg = 'bleep';"), @output)
+    @output.string.should match(/var blarg = 'bleep';/)
+  end
+
+  it "copies files" do
+    @input = StringIO.new("});", 'r')
+    @output = StringIO.new("", 'w')
+    JS::Module.new(@input, @output).copy_file(file('spec/input/simple.js'), @output)
+    @output.string.should match(/var blarg = 'bleep';/)
   end
 
   it "consumes stuff inside block" do
@@ -78,4 +97,14 @@ INPUT
     @input.readline.should == "var x = 1;\n"
     @output.string.should == ""
   end
+
+  it "inlines requirements" do pending do
+    @input = StringIO.new(<<INPUT, 'r')
+  m.require('simple.js')
+});
+INPUT
+    @output = StringIO.new("", 'w')
+    JS::Module.new(@input, @output)
+    @output.string.should == "var blarg = 'bleep';\n"
+  end end
 end

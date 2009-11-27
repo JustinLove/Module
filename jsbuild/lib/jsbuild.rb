@@ -24,9 +24,19 @@ module JS
       input.each_line do |l|
         if (l.include?('});'))
           return
+        elsif (m = l.match(/require\(['"](.*)['"]\)/))
+          copy_file(m[0], output)
         end
       end
       raise "unterminated module" if input.eof
+    end
+
+    def copy_file(file, output)
+      File.open(file, 'r') { |input| copy_stream(input, output) }
+    end
+
+    def copy_stream(input, output)
+      output << input.read
     end
   end
 end
