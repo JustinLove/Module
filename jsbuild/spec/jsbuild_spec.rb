@@ -47,4 +47,17 @@ describe JS::Module do
     @input.should be_eof
     @output.string.should == ""
   end
+
+  it "leaves remaining code alone" do
+    @input = StringIO.new(<<INPUT, 'r')
+});
+
+var x = 1;
+INPUT
+    @output = StringIO.new("", 'w')
+    JS::Module.new(@input, @output)
+    @input.readline.should == "\n"
+    @input.readline.should == "var x = 1;\n"
+    @output.string.should == ""
+  end
 end
