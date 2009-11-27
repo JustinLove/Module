@@ -81,50 +81,52 @@ describe JS::Dependency do
     JS::Dependency.new('jsbuild/spec/input/simple.js').local_path.should  == file('spec/input/simple.js')
   end
 
-  def file_contents(file)
-    File.open(file) {|f| f.readlines.join}
-  end
+  context 'building' do
+    def file_contents(file)
+      File.open(file) {|f| f.readlines.join}
+    end
 
-  def compare_files(input, output)
-    file_contents(output).should == file_contents(input)
-  end
+    def compare_files(input, output)
+      file_contents(output).should == file_contents(input)
+    end
 
-  def expected_contents(filename)
-    compare_files(file('spec/expected/' + filename), file('spec/output/' + filename))
-  end
+    def expected_contents(filename)
+      compare_files(file('spec/expected/' + filename), file('spec/output/' + filename))
+    end
 
-  def io_pair(filename)
-    [file('spec/input/' + filename), file('spec/output/' + filename.sub('.js', '-built.js'))]
-  end
+    def io_pair(filename)
+      [file('spec/input/' + filename), file('spec/output/' + filename.sub('.js', '-built.js'))]
+    end
 
-  def build(filename)
-    io = io_pair(filename)
-    JS::Dependency.new(io.first).build(io.last)
-  end
+    def build(filename)
+      io = io_pair(filename)
+      JS::Dependency.new(io.first).build(io.last)
+    end
 
-  def run(filename)
-    build(filename)
-    expected_contents(filename.sub(/\.js$/, '-built.js'))
-  end
+    def run(filename)
+      build(filename)
+      expected_contents(filename.sub(/\.js$/, '-built.js'))
+    end
 
-  before(:all) do
-    FileUtils.rm Dir.glob file('spec/output/*.js');
-  end
+    before(:all) do
+      FileUtils.rm Dir.glob file('spec/output/*.js');
+    end
 
-  it "passes simple files through unaffected" do
-    build('simple.js')
-    compare_files(*io_pair('simple.js'))
-  end
+    it "passes simple files through unaffected" do
+      build('simple.js')
+      compare_files(*io_pair('simple.js'))
+    end
 
-  it "removes multi-line modules" do
-    run('multiline.js')
-  end
+    it "removes multi-line modules" do
+      run('multiline.js')
+    end
 
-  it "leaves remaining code alone" do
-    run('codeafter.js')
-  end
+    it "leaves remaining code alone" do
+      run('codeafter.js')
+    end
   
-  it "inlines requirements" do
-    run('require-simple.js')
+    it "inlines requirements" do
+      run('require-simple.js')
+    end
   end
 end
