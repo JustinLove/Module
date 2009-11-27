@@ -3,13 +3,17 @@ module JS
     def self.build(input, output)
       File.open(output, 'w') do |fout|
         File.open(input, 'r') do |fin|
-          fin.each_line do |l|
-            if (l.match(/new CGD.Module/))
-              Module.new(fin, fout)
-            else
-              fout << l
-            end
-          end
+          process(fin, fout)
+        end
+      end
+    end
+
+    def self.process(fin, fout)
+      fin.each_line do |l|
+        if (l.match(/new CGD.Module/))
+          Module.new(fin, fout)
+        else
+          fout << l
         end
       end
     end
