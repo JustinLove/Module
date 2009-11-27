@@ -90,8 +90,7 @@ INPUT
 var x = 1;
 INPUT
     JS::Module.new(@input, @output)
-    @input.readline.should == "\n"
-    @input.readline.should == "var x = 1;\n"
+    @input.read.should match("var x = 1;")
     @output.string.should == ""
   end
 
@@ -101,6 +100,6 @@ INPUT
 });
 INPUT
     JS::Module.new(@input, @output)
-    @output.string.should == "var blarg = 'bleep';\n"
+    @output.string.should match("var blarg = 'bleep';")
   end end
 end
