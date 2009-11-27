@@ -11,7 +11,7 @@ module JS
     def self.process(fin, fout)
       fin.each_line do |l|
         if (l.match(/new CGD.Module/))
-          Module.new(fin, fout)
+          Module.new.parse(fin, fout)
         else
           fout << l
         end
@@ -20,7 +20,7 @@ module JS
   end
 
   class Module
-    def initialize(input, output)
+    def parse(input, output)
       input.each_line do |l|
         if (l.include?('});'))
           return
