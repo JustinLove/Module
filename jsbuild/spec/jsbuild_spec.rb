@@ -53,6 +53,10 @@ describe JS::Module do
     JS::Module.new.should_not be_nil
   end
 
+  it "has a path" do
+    JS::Module.new('input').path.should == 'input'
+  end
+
   it "parses until end of block" do
     @input = StringIO.new("});", 'r')
     JS::Module.new.parse(@input, @output)

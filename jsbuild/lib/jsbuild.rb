@@ -20,6 +20,12 @@ module JS
   end
 
   class Module
+    attr_reader :path
+
+    def initialize(path = "")
+      @path = path
+    end
+
     def parse(input, output)
       input.each_line do |l|
         if (l.include?('});'))
