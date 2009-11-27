@@ -2,9 +2,7 @@ module JS
   class Build
     def self.build(input, output)
       File.open(output, 'w') do |fout|
-        File.open(input, 'r') do |fin|
-          Dependency.new(input).process(fin, fout)
-        end
+        Dependency.new(input).build(fout)
       end
     end
   end
@@ -43,6 +41,10 @@ module JS
     def initialize(path)
       @path = path
       @local_path = File.join(FileUtils.pwd, path)
+    end
+
+    def build(fout)
+      File.open(path, 'r') {|fin| process(fin, fout) }
     end
 
     def process(fin, fout)
