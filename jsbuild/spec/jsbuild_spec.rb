@@ -38,10 +38,10 @@ describe JS::Build do
     expected_contents('codeafter-built.js')
   end
   
-  it "inlines requirements" do pending do
+  it "inlines requirements" do
     JS::Build.build(*io_pair('require-simple.js'))
     expected_contents('require-simple-built.js')
-  end end
+  end
 end
 
 describe JS::Module do

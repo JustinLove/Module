@@ -3,15 +3,15 @@ module JS
     def self.build(input, output)
       File.open(output, 'w') do |fout|
         File.open(input, 'r') do |fin|
-          process(fin, fout)
+          process(fin, fout, input)
         end
       end
     end
 
-    def self.process(fin, fout)
+    def self.process(fin, fout, file)
       fin.each_line do |l|
-        if (l.match(/new CGD.Module/))
-          Module.new.parse(fin, fout)
+        if (ma = l.match(/new CGD.Module\(['"]([^"']*)["']/))
+          Module.new(file.gsub(ma[1], '')).parse(fin, fout)
         else
           fout << l
         end
