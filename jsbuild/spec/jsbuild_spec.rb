@@ -28,11 +28,6 @@ describe JS::Build do
     compare_files(*io_pair('simple.js'))
   end
 
-  it "removes single-line modules" do
-    JS::Build.build(*io_pair('oneline.js'))
-    expected_contents('oneline-built.js')
-  end
-
   it "removes multi-line modules" do
     JS::Build.build(*io_pair('multiline.js'))
     expected_contents('multiline-built.js')

@@ -3,7 +3,12 @@ module JS
     def self.build(input, output)
       File.open(output, 'w') do |fout|
         File.open(input, 'r') do |fin|
-          fout << fin.readlines.join.gsub(/new CGD.Module.*\);/m, '')
+          l = fin.readline
+          if (l.match(/new CGD.Module/))
+            Module.new(fin, fout)
+          else
+            fout << l
+          end
         end
       end
     end
