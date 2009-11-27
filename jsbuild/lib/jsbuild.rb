@@ -20,10 +20,6 @@ module JS
     def copy_file(file, output)
       Dependency.new(File.join(@path, file)).process(output)
     end
-
-    def copy_stream(input, output)
-      output << input.read
-    end
   end
 
   class Dependency

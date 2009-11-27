@@ -26,11 +26,6 @@ describe JS::Module do
     lambda {JS::Module.new.parse(@input, @output)}.should raise_error
   end
 
-  it "copies streams" do
-    JS::Module.new.copy_stream(StringIO.new("var blarg = 'bleep';"), @output)
-    @output.string.should match(/var blarg = 'bleep';/)
-  end
-
   it "copies files" do
     JS::Module.new.copy_file(file('spec/input/simple.js'), @output)
     @output.string.should match(/var blarg = 'bleep';/)
