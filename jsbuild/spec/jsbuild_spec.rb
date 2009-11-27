@@ -33,10 +33,10 @@ describe JS::Build do
     expected_contents('multiline-built.js')
   end
 
-  it "leaves remaining code alone" do pending do
+  it "leaves remaining code alone" do
     JS::Build.build(*io_pair('codeafter.js'))
     expected_contents('codeafter-built.js')
-  end end
+  end
 end
 
 describe JS::Module do
