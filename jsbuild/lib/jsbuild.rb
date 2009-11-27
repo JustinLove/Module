@@ -3,17 +3,7 @@ module JS
     def self.build(input, output)
       File.open(output, 'w') do |fout|
         File.open(input, 'r') do |fin|
-          process(fin, fout, input)
-        end
-      end
-    end
-
-    def self.process(fin, fout, file)
-      fin.each_line do |l|
-        if (ma = l.match(/new CGD.Module\(['"]([^"']*)["']/))
-          Module.new(file.gsub(ma[1], '')).parse(fin, fout)
-        else
-          fout << l
+          Dependency.new(input).process(fin, fout)
         end
       end
     end
@@ -53,6 +43,16 @@ module JS
     def initialize(path)
       @path = path
       @local_path = File.join(FileUtils.pwd, path)
+    end
+
+    def process(fin, fout)
+      fin.each_line do |l|
+        if (ma = l.match(/new CGD.Module\(['"]([^"']*)["']/))
+          Module.new(path.gsub(ma[1], '')).parse(fin, fout)
+        else
+          fout << l
+        end
+      end
     end
   end
 end

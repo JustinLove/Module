@@ -108,6 +108,15 @@ INPUT
     JS::Module.new('jsbuild/spec/input').parse(@input, @output)
     @output.string.should match("var blarg = 'bleep';")
   end
+
+  it "inlines sub requirements" do pending do
+    @input = StringIO.new(<<INPUT, 'r')
+  m.require('require-simple.js')
+});
+INPUT
+    JS::Module.new('jsbuild/spec/input').parse(@input, @output)
+    @output.string.should match("var blarg = 'bleep';")
+  end end
 end
 
 describe JS::Dependency do
