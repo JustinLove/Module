@@ -18,7 +18,7 @@ module JS
     end
 
     def copy_file(file, output)
-      File.open(File.join(@path, file), 'r') { |input| copy_stream(input, output) }
+      Dependency.new(File.join(@path, file)).process(output)
     end
 
     def copy_stream(input, output)
