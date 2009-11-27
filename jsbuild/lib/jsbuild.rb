@@ -8,4 +8,10 @@ module JS
       end
     end
   end
+  
+  class Module
+    def initialize(input, output)
+      input.readline
+    end
+  end
 end

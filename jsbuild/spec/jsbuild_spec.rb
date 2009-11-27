@@ -43,3 +43,13 @@ describe JS::Build do
     expected_contents('codeafter-built.js')
   end end
 end
+
+describe JS::Module do
+  it "parses until end of block" do
+    @input = StringIO.new(")};", 'r')
+    @output = StringIO.new("", 'w')
+    JS::Module.new(@input, @output)
+    @input.should be_eof
+    @output.string.should == ""
+  end
+end
