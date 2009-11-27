@@ -45,9 +45,12 @@ describe JS::Build do
 end
 
 describe JS::Module do
+  before do
+    @output = StringIO.new("", 'w')
+  end
+
   it "parses until end of block" do
     @input = StringIO.new("});", 'r')
-    @output = StringIO.new("", 'w')
     JS::Module.new(@input, @output)
     @input.should be_eof
     @output.string.should == ""
@@ -55,21 +58,18 @@ describe JS::Module do
 
   it "detects malformed block" do
     @input = StringIO.new(")}", 'r')
-    @output = StringIO.new("", 'w')
     lambda {raise}.should raise_error
     lambda {JS::Module.new(@input, @output)}.should raise_error
   end
 
   it "copies streams" do
     @input = StringIO.new("});", 'r')
-    @output = StringIO.new("", 'w')
     JS::Module.new(@input, @output).copy_stream(StringIO.new("var blarg = 'bleep';"), @output)
     @output.string.should match(/var blarg = 'bleep';/)
   end
 
   it "copies files" do
     @input = StringIO.new("});", 'r')
-    @output = StringIO.new("", 'w')
     JS::Module.new(@input, @output).copy_file(file('spec/input/simple.js'), @output)
     @output.string.should match(/var blarg = 'bleep';/)
   end
@@ -79,7 +79,6 @@ describe JS::Module do
   var x = 1;
 });
 INPUT
-    @output = StringIO.new("", 'w')
     JS::Module.new(@input, @output)
     @input.should be_eof
     @output.string.should == ""
@@ -91,7 +90,6 @@ INPUT
 
 var x = 1;
 INPUT
-    @output = StringIO.new("", 'w')
     JS::Module.new(@input, @output)
     @input.readline.should == "\n"
     @input.readline.should == "var x = 1;\n"
@@ -103,7 +101,6 @@ INPUT
   m.require('simple.js')
 });
 INPUT
-    @output = StringIO.new("", 'w')
     JS::Module.new(@input, @output)
     @output.string.should == "var blarg = 'bleep';\n"
   end end
