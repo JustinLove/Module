@@ -31,14 +31,14 @@ module JS
         if (l.include?('});'))
           return
         elsif (m = l.match(/require\(['"](.*)['"]\)/))
-          copy_file(m[0], output)
+          copy_file(m[1], output)
         end
       end
       raise "unterminated module" if input.eof
     end
 
     def copy_file(file, output)
-      File.open(file, 'r') { |input| copy_stream(input, output) }
+      File.open(File.join(@path, file), 'r') { |input| copy_stream(input, output) }
     end
 
     def copy_stream(input, output)

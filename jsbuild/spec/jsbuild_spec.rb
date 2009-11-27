@@ -100,14 +100,14 @@ INPUT
     @output.string.should == ""
   end
 
-  it "inlines requirements" do pending do
+  it "inlines requirements" do
     @input = StringIO.new(<<INPUT, 'r')
   m.require('simple.js')
 });
 INPUT
-    JS::Module.new.parse(@input, @output)
+    JS::Module.new('jsbuild/spec/input').parse(@input, @output)
     @output.string.should match("var blarg = 'bleep';")
-  end end
+  end
 end
 
 describe JS::Dependency do
