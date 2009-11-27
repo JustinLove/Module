@@ -16,7 +16,11 @@ module JS
   
   class Module
     def initialize(input, output)
-      input.readline
+      input.each_line do |l|
+        if (l.match(/\}\)\;/))
+          return
+        end
+      end
     end
   end
 end

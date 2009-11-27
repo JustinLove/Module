@@ -48,6 +48,17 @@ describe JS::Module do
     @output.string.should == ""
   end
 
+  it "consumes stuff inside block" do
+    @input = StringIO.new(<<INPUT.rstrip, 'r')
+  var x = 1;
+});
+INPUT
+    @output = StringIO.new("", 'w')
+    JS::Module.new(@input, @output)
+    @input.should be_eof
+    @output.string.should == ""
+  end
+
   it "leaves remaining code alone" do
     @input = StringIO.new(<<INPUT, 'r')
 });
