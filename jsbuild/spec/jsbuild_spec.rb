@@ -109,3 +109,9 @@ INPUT
     @output.string.should match("var blarg = 'bleep';")
   end end
 end
+
+describe JS::Dependency do
+  it "resolves a local path" do
+    JS::Dependency.new('jsbuild/spec/input/simple.js').local_path.should  == file('spec/input/simple.js')
+  end
+end

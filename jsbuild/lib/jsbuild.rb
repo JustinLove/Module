@@ -45,4 +45,14 @@ module JS
       output << input.read
     end
   end
+
+  class Dependency
+    attr_reader :path
+    attr_reader :local_path
+
+    def initialize(path)
+      @path = path
+      @local_path = File.join(FileUtils.pwd, path)
+    end
+  end
 end
