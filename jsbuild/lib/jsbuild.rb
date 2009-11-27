@@ -18,7 +18,7 @@ module JS
       end
     end
   end
-  
+
   class Module
     def initialize(input, output)
       input.each_line do |l|
