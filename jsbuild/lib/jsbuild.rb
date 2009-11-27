@@ -1,12 +1,4 @@
 module JS
-  class Build
-    def self.build(input, output)
-      File.open(output, 'w') do |fout|
-        Dependency.new(input).build(fout)
-      end
-    end
-  end
-
   class Module
     attr_reader :path
 
@@ -43,11 +35,17 @@ module JS
       @local_path = File.join(FileUtils.pwd, path)
     end
 
-    def build(fout)
-      File.open(path, 'r') {|fin| process(fin, fout) }
+    def build(output)
+      File.open(output, 'w') do |fout|
+        process(fout)
+      end
     end
 
-    def process(fin, fout)
+    def process(fout)
+      File.open(path, 'r') {|fin| parse(fin, fout) }
+    end
+
+    def parse(fin, fout)
       fin.each_line do |l|
         if (ma = l.match(/new CGD.Module\(['"]([^"']*)["']/))
           Module.new(path.gsub(ma[1], '')).parse(fin, fout)

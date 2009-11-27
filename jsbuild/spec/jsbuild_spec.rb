@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 libs %w{jsbuild}
 
-describe JS::Build do
+describe JS::Dependency do
 
   def file_contents(file)
     File.open(file) {|f| f.readlines.join}
@@ -21,7 +21,7 @@ describe JS::Build do
 
   def build(filename)
     io = io_pair(filename)
-    JS::Build.build(*io)
+    JS::Dependency.new(io.first).build(io.last)
   end
 
   def run(filename)
