@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module JS
   class Module
     attr_reader :path
@@ -65,4 +67,8 @@ module JS
       end
     end
   end
+end
+
+if __FILE__ == $0
+  JS::Dependency.new(ARGV[0]).build(ARGV[1])
 end
