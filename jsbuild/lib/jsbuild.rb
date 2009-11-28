@@ -11,13 +11,13 @@ module JS
         if (l.include?('});'))
           return
         elsif (m = l.match(/require\(['"](.*)['"]\)/))
-          copy_file(m[1], output)
+          require_file(m[1], output)
         end
       end
       raise "unterminated module" if input.eof
     end
 
-    def copy_file(file, output)
+    def require_file(file, output)
       Dependency.new(File.join(@path, file)).process(output)
     end
   end
