@@ -176,5 +176,9 @@ describe JS::Dependency do
       `ruby jsbuild/lib/jsbuild.rb distant/distantmodule.js jsbuild/spec/output/distantmodule-built2.js`
       compare_files(file('spec/expected/distantmodule-built.js'), file('spec/output/distantmodule-built2.js'))
     end
+
+    it "whines about too few arguments" do
+      `ruby jsbuild/lib/jsbuild.rb distant/distantmodule.js`.should_not be_empty
+    end
   end
 end

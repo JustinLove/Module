@@ -70,5 +70,9 @@ module JS
 end
 
 if __FILE__ == $0
-  JS::Dependency.new(ARGV[0]).build(ARGV[1])
+  if (ARGV.length == 2)
+    JS::Dependency.new(ARGV[0]).build(ARGV[1])
+  else
+    puts "usage: ruby jsbuild.rb <top>.js <ouput>.js"
+  end
 end
