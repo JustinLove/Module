@@ -89,6 +89,17 @@ INPUT
     JS::Module.new('jsbuild/spec/input').parse(@input, @output)
     @output.string.should match("var subfile = 'subfile';")
   end
+
+  it "handles relative modules" do
+    @input = StringIO.new(<<INPUT, 'r')
+  m.under('subdir/', function(sub) {
+    sub.require('submodule.js')
+  });
+});
+INPUT
+    JS::Module.new('jsbuild/spec/input').parse(@input, @output)
+    @output.string.should match("var subfile = 'subfile';")
+  end
 end
 
 describe JS::Dependency do
