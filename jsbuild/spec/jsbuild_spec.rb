@@ -3,6 +3,7 @@ libs %w{jsbuild}
 
 describe JS::Module do
   before do
+    JS::Module.clear_files
     @output = StringIO.new("", 'w')
   end
 
@@ -29,6 +30,14 @@ describe JS::Module do
   it "requires files" do
     JS::Module.new.require_file(file('spec/input/simple.js'), @output)
     @output.string.should match(/var blarg = 'bleep';/)
+  end
+
+  it "requires files only once" do
+    mod = JS::Module.new
+    mod.require_file(file('spec/input/simple.js'), @output)
+    mod.require_file(file('spec/input/simple.js'), @output)
+    @output.string.should match(/var blarg = 'bleep';/)
+    @output.string.should_not match(/blarg.*blarg/m)
   end
 
   it "consumes stuff inside block" do
@@ -105,6 +114,10 @@ describe JS::Dependency do
 
     before(:all) do
       FileUtils.rm Dir.glob file('spec/output/*.js');
+    end
+
+    before(:each) do
+      JS::Module.clear_files
     end
 
     it "passes simple files through unaffected" do

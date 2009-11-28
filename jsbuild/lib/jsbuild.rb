@@ -2,6 +2,11 @@ module JS
   class Module
     attr_reader :path
 
+    def self.clear_files
+      @@files = {}
+    end
+    clear_files
+
     def initialize(path = "")
       @path = path
     end
@@ -18,7 +23,14 @@ module JS
     end
 
     def require_file(file, output)
-      Dependency.new(File.join(@path, file)).process(output)
+      if (@@files[file])
+        return @@files[file]
+      end
+      fullpath = File.join(@path, file)
+      if (@@files[fullpath])
+        return @@files[fullpath]
+      end
+      @@files[file] = @@files[fullpath] = Dependency.new(fullpath).process(output)
     end
   end
 
