@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 libs %w{jsbuild}
 
 describe JS::Module do
-  before do
+  before :each do
     JS::Module.clear_files
     @output = StringIO.new("", 'w')
   end
@@ -66,7 +66,9 @@ INPUT
   m.require('simple.js')
 });
 INPUT
-    JS::Module.new('jsbuild/spec/input').parse(@input, @output)
+    FileUtils.cd(file('..')) do
+      JS::Module.new('jsbuild/spec/input').parse(@input, @output)
+    end
     @output.string.should match("var blarg = 'bleep';")
   end
 
@@ -75,7 +77,9 @@ INPUT
   m.require('require-simple.js')
 });
 INPUT
-    JS::Module.new('jsbuild/spec/input').parse(@input, @output)
+    FileUtils.cd(file('..')) do
+      JS::Module.new('jsbuild/spec/input').parse(@input, @output)
+    end
     @output.string.should match("var blarg = 'bleep';")
   end
 
@@ -86,7 +90,9 @@ INPUT
   });
 });
 INPUT
-    JS::Module.new('jsbuild/spec/input').parse(@input, @output)
+    FileUtils.cd(file('..')) do
+      JS::Module.new('jsbuild/spec/input').parse(@input, @output)
+    end
     @output.string.should match("var subfile = 'subfile';")
   end
 
@@ -97,14 +103,18 @@ INPUT
   });
 });
 INPUT
-    JS::Module.new('jsbuild/spec/input').parse(@input, @output)
+    FileUtils.cd(file('..')) do
+      JS::Module.new('jsbuild/spec/input').parse(@input, @output)
+    end
     @output.string.should match("var subfile = 'subfile';")
   end
 end
 
 describe JS::Dependency do
   it "resolves a local path" do
-    JS::Dependency.new('jsbuild/spec/input/simple.js').local_path.should  == file('spec/input/simple.js')
+    FileUtils.cd(file('..')) do
+      JS::Dependency.new('jsbuild/spec/input/simple.js').local_path.should  == file('spec/input/simple.js')
+    end
   end
 
   def file_contents(file)
@@ -173,12 +183,16 @@ describe JS::Dependency do
 
   context "command line" do
     it "runs from the command line" do
-      `ruby jsbuild/lib/jsbuild.rb distant/distantmodule.js jsbuild/spec/output/distantmodule-built2.js`
-      compare_files(file('spec/expected/distantmodule-built.js'), file('spec/output/distantmodule-built2.js'))
+      FileUtils.cd(file('..')) do
+        `ruby jsbuild/lib/jsbuild.rb distant/distantmodule.js jsbuild/spec/output/distantmodule-built2.js`
+        compare_files(file('spec/expected/distantmodule-built.js'), file('spec/output/distantmodule-built2.js'))
+      end
     end
 
     it "whines about too few arguments" do
-      `ruby jsbuild/lib/jsbuild.rb distant/distantmodule.js`.should_not be_empty
+      FileUtils.cd(file('..')) do
+        `ruby jsbuild/lib/jsbuild.rb distant/distantmodule.js`.should_not be_empty
+      end
     end
   end
 end
