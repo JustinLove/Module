@@ -17,6 +17,8 @@ module JS
           return
         elsif (m = l.match(/require\(['"](.*)['"]\)/))
           require_file(m[1], output)
+        elsif (ma = l.match(/under\(['"]([^"']*)["']/))
+          Module.new(File.join(path, ma[1])).parse(input, output)
         end
       end
       raise "unterminated module" if input.eof

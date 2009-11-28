@@ -78,6 +78,17 @@ INPUT
     JS::Module.new('jsbuild/spec/input').parse(@input, @output)
     @output.string.should match("var blarg = 'bleep';")
   end
+
+  it "handles relative path groups" do
+    @input = StringIO.new(<<INPUT, 'r')
+  m.under('subdir/', function(sub) {
+    sub.require('subfile.js')
+  });
+});
+INPUT
+    JS::Module.new('jsbuild/spec/input').parse(@input, @output)
+    @output.string.should match("var subfile = 'subfile';")
+  end
 end
 
 describe JS::Dependency do
