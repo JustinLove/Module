@@ -162,5 +162,12 @@ describe JS::Dependency do
     it "inlines sub requirements" do
       run('require-require.js')
     end
+
+    it "handles distant modules" do
+      input = file('../distant/distantmodule.js')
+      output = file('spec/output/distantmodule-built.js')
+      JS::Dependency.new(input).build(output)
+      expected_contents('distantmodule-built.js')
+    end
   end
 end
