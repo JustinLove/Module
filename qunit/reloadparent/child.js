@@ -1,1 +1,1 @@
-equals(CGD.mod.files['reloadparent/parent.js'].status(), 'pending');
+ok(CGD.mod.files['reloadparent/parent.js'].status() != 'loaded', 'file status is not loaded');

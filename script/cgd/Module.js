@@ -122,7 +122,8 @@ CGD.god = window;
     f(this);
     if (this.queued > 0) {
       this.files[fullPath] && this.files[fullPath].aborted();
-      this.require(file.slice(path.length));
+      var m = this;
+      setTimeout(function() {m.require(file.slice(path.length));}, 0);
       throw new CGD.Module.DependenciesNotYetLoaded;
     }
   };
