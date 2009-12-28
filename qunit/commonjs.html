@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="../style/test.css" type="text/css" media="screen" />
+
+<script type="text/javascript" src="qunit/qunit.js"></script>
+
+<script type="text/javascript" src="../script/cgd/debug.js"></script>
+<script type="text/javascript" src="../script/cgd/Module.js"></script>
+
+  <script>
+
+CGD.test = CGD.test || {};
+CGD.test.timeout = isLocal ? 100 : 500;
+
+module("Module Context");
+
+test("In a module, there is a free variable 'require', that is a function.", function() {
+  equals(typeof(require), 'function');
+});
+
+test("The 'require' function accepts a module identifier", function() {
+  CGD.mod.require('loadme.js');
+});
+
+test("'require' returns the exported API of the foreign module.", function() {
+  equals(CGD.mod.require('exports.js').pass, true);
+});
+
+test("Partial load of dependency cycles", function() {
+  ok(false, "can't load dependency cycles, period.");
+});
+
+test("If the requested module cannot be returned, 'require' must throw an error.", function() {
+  try {
+    CGD.mod.require('nothing');
+    ok(false, 'no error was thrown');
+  } catch(e) {
+    ok(true, e);
+  }
+});
+
+test("In a module, there is a free variable called 'exports'.", function() {
+  equals(typeof(exports), 'object');
+});
+
+// modules must use the "exports" object as the only means of exporting.
+
+module("Module Identifiers");
+
+var absolute = "subdir/subpass.js"; // this will never work (or rarely)
+var relative = "subchild.js";
+
+test("A module identifier is a String of 'terms' delimited by forward slashes.", function() {
+  ok(absolute.split('/').length > 1);
+});
+
+test("A term must be a cameCase identifier, '.', or '..'.", function() {
+  ok(absolute.match(/^[a-zA-Z0-9.\/]+$/));
+});
+
+test("Module identifiers may not have file-name extensions like '.js'.", function() {
+  ok(!absolute.match(/\.js/));
+});
+
+test("A module identifier is 'relative' if the first term is '.' or '..'.", function() {
+  equals(CGD.mod.require.relative(relative), true);
+});
+
+test("Top-level identifiers are resolved off the conceptual module name space root.", function() {
+  expect(1);
+  stop();
+  new CGD.Module("subdir/submod.js", function(mod) {
+    m.require(absolute);
+  });
+  setTimeout(start, CGD.test.timeout);
+});
+
+test("Relative identifiers are resolved relative to the identifier of the module in which 'require' is written and called.", function() {
+  expect(1);
+  stop();
+  new CGD.Module("subdir/submod.js", function(mod) {
+    m.require(relative);
+  });
+  setTimeout(start, CGD.test.timeout);
+});
+
+  </script>
+  
+</head>
+<body onload="CGD.DEBUG.onload();">
+ <h1 id="qunit-header">QUnit example</h1>
+ <h2 id="qunit-banner"></h2>
+ <h2 id="qunit-userAgent"></h2>
+ <ol id="qunit-tests"></ol>
+ <div id="debugDiv" />
+</body>
+</html>
+</html>
