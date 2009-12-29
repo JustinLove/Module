@@ -44,15 +44,19 @@ CGD.god = window;
     }
   };
 
-  CGD.Dependency = function(path, fullPath) {
+  CGD.Dependency = function(path) {
     this.path = path;
-    this.canonicalPath = fullPath || path;
+    this.canonicalPath = path;
     this.type = CGD.Dependency.guessFileType(this.path);
     this.load = {status: 'new'};
   };
 
   CGD.Dependency.prototype = {
     constructor: CGD.Dependency,
+    withCanonicalPath: function(fullPath) {
+      this.canonicalPath = fullPath;
+      return this;
+    },
     register: function(files) {
       files[this.path] = this;
       files[this.canonicalPath] = this;
@@ -172,7 +176,8 @@ CGD.god = window;
       }
     },
     fileFromPath: function(path, type) {
-      var file = this.files[path] || new CGD.Dependency(path, this.root + path);
+      var file = this.files[path] ||
+        new CGD.Dependency(path).withCanonicalPath(this.root + path);
       var element = file.element(type);
       file = this.files[file.canonicalPath] || file;
       return {file: file, element: element};
@@ -183,7 +188,10 @@ CGD.god = window;
         var fullPath = tags[i][attr];
         if (fullPath.indexOf(this.root) == 0) {
           var relativePath = fullPath.substr(this.root.length);
-          new CGD.Dependency(relativePath, fullPath).register(this.files).loaded();
+          new CGD.Dependency(relativePath).
+            withCanonicalPath(fullPath).
+            register(this.files).
+            loaded();
         }
       }
     }

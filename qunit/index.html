@@ -46,7 +46,7 @@ test("has canonicalPath property", function()
 });
 
 test("Can construct a dependency with a full path", function() {
-  equals(new CGD.Dependency('pass.js', 'full/pass.js').canonicalPath, 'full/pass.js');
+  equals(new CGD.Dependency('pass.js').withCanonicalPath('full/pass.js').canonicalPath, 'full/pass.js');
 });
 
 test("registers itself", function() {
