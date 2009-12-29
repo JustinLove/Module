@@ -134,6 +134,16 @@ test("detects static script files", function() {
   ok(false, 'did not find static file');
 });
 
+test("detects static style files", function() {
+  for (var i in CGD.mod.files) {
+    if (CGD.mod.files[i].canonicalPath.match(/qunit.css/)) {
+      ok(true, 'found static file');
+      return;
+    }
+  }
+  ok(false, 'did not find static file');
+});
+
 test("require includes a file only once", function() {
   expect(0);
   stop();
