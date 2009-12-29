@@ -53,7 +53,7 @@ CGD.god = window;
 
   CGD.Dependency.prototype = {
     constructor: CGD.Dependency,
-    withCanonicalPath: function(fullPath) {
+    canonically: function(fullPath) {
       this.canonicalPath = fullPath;
       return this;
     },
@@ -177,7 +177,7 @@ CGD.god = window;
     },
     fileFromPath: function(path, type) {
       var file = this.files[path] ||
-        new CGD.Dependency(path, type).withCanonicalPath(this.root + path);
+        new CGD.Dependency(path, type).canonically(this.root + path);
       var element = file.element(type);
       file = this.files[file.canonicalPath] || file;
       return {file: file, element: element};
@@ -189,7 +189,7 @@ CGD.god = window;
         if (fullPath.indexOf(this.root) == 0) {
           var relativePath = fullPath.substr(this.root.length);
           new CGD.Dependency(relativePath, tags[i].type).
-            withCanonicalPath(fullPath).
+            canonically(fullPath).
             register(this.files).
             loaded();
         }
