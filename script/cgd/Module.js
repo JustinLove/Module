@@ -44,10 +44,10 @@ CGD.god = window;
     }
   };
 
-  CGD.Dependency = function(path) {
+  CGD.Dependency = function(path, type) {
     this.path = path;
     this.canonicalPath = path;
-    this.type = CGD.Dependency.guessFileType(this.path);
+    this.type = type || 'text/javascript';
     this.load = {status: 'new'};
   };
 
