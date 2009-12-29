@@ -134,6 +134,15 @@ test("detects static script files", function() {
   ok(false, 'did not find static file');
 });
 
+test("has the proper type for static script files", function() {
+  for (var i in CGD.mod.files) {
+    if (CGD.mod.files[i].canonicalPath.match(/qunit.js/)) {
+      equals(CGD.mod.files[i].type, 'text/javascript');
+      return;
+    }
+  }
+});
+
 test("detects static style files", function() {
   for (var i in CGD.mod.files) {
     if (CGD.mod.files[i].canonicalPath.match(/qunit.css/)) {
@@ -142,6 +151,15 @@ test("detects static style files", function() {
     }
   }
   ok(false, 'did not find static file');
+});
+
+test("has the proper type for static style files", function() {
+  for (var i in CGD.mod.files) {
+    if (CGD.mod.files[i].canonicalPath.match(/qunit.css/)) {
+      equals(CGD.mod.files[i].type, 'text/css');
+      return;
+    }
+  }
 });
 
 test("require includes a file only once", function() {
