@@ -170,6 +170,10 @@ test("has the proper type for static style files", function() {
   }
 });
 
+test("fileFromPath gets proper file type", function() {
+  equals(CGD.mod.fileFromPath('blarg', 'text/css').file.type, 'text/css');
+});
+
 test("require includes a file only once", function() {
   expect(0);
   stop();

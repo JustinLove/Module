@@ -177,7 +177,7 @@ CGD.god = window;
     },
     fileFromPath: function(path, type) {
       var file = this.files[path] ||
-        new CGD.Dependency(path).withCanonicalPath(this.root + path);
+        new CGD.Dependency(path, type).withCanonicalPath(this.root + path);
       var element = file.element(type);
       file = this.files[file.canonicalPath] || file;
       return {file: file, element: element};
