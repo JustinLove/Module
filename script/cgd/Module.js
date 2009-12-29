@@ -30,12 +30,12 @@ CGD.god = window;
     document.getElementsByTagName('head')[0].appendChild(element);
   };
 
-  CGD.html.findMe = function(tag, attr, file) {
+  CGD.html.findMe = function(tag, attr, filename) {
     var tags = document.getElementsByTagName(tag);
-    if (file[0] == '/') {
-      var r = new RegExp(file + '$');
+    if (filename[0] == '/') {
+      var r = new RegExp(filename + '$');
     } else {
-      var r = new RegExp('/' + file + '$');
+      var r = new RegExp('/' + filename + '$');
     }
     for (var i = 0;i < tags.length;i++) {
       if (r.exec(tags[i][attr])) {
@@ -111,19 +111,19 @@ CGD.god = window;
     }[path.match(/\.(\w*)$/)[1]];
   };
 
-  CGD.Module = function(file, f) {
-    var path = CGD.Module.pathTo(file);
-    var fullPath = CGD.html.findMe('script', 'src', file);
+  CGD.Module = function(filename, f) {
+    var path = CGD.Module.pathTo(filename);
+    var fullPath = CGD.html.findMe('script', 'src', filename);
     this.queued = 0;
     if (fullPath) {
-      this.root = fullPath.slice(0, -file.length);
+      this.root = fullPath.slice(0, -filename.length);
     }
     this.cd(path);
     f(this);
     if (this.queued > 0) {
       this.files[fullPath] && this.files[fullPath].aborted();
       var m = this;
-      setTimeout(function() {m.require(file.slice(path.length));}, 0);
+      setTimeout(function() {m.require(filename.slice(path.length));}, 0);
       throw new CGD.Module.DependenciesNotYetLoaded;
     }
   };
@@ -147,8 +147,8 @@ CGD.god = window;
       F.prototype = this;
       return new F();
     },
-    include: function(file, type) {
-      new CGD.Dependency(file).include(type);
+    include: function(filename, type) {
+      new CGD.Dependency(filename).include(type);
     },
     require: function(filename, type) {
       var x = this.fileFromPath(this.path + filename);
@@ -189,10 +189,10 @@ CGD.god = window;
     }
   };
 
-  CGD.Module.pathTo = function(file) {
-    var slash = file.lastIndexOf('/');
+  CGD.Module.pathTo = function(filename) {
+    var slash = filename.lastIndexOf('/');
     if (slash >= 1) {
-      return file.slice(0, slash+1);
+      return filename.slice(0, slash+1);
     } else {
       return '';
     }
@@ -204,7 +204,7 @@ CGD.god = window;
   dnyl.message = "Not all dependencies loaded; file will be retried later.";
   dnyl.toString = function() {return this.name + ": " + this.message;};
 
-  CGD.Module.UnmetDependency = function(file) {this.message = file + " could not be loaded";};
+  CGD.Module.UnmetDependency = function(filename) {this.message = filename + " could not be loaded";};
   var unmet = CGD.Module.UnmetDependency.prototype;
   unmet.name = "UnmetDependency";
   unmet.toString = function() {return this.name + ": " + this.message;};
