@@ -188,7 +188,7 @@ CGD.god = window;
         var fullPath = tags[i][attr];
         if (fullPath.indexOf(this.root) == 0) {
           var relativePath = fullPath.substr(this.root.length);
-          new CGD.Dependency(relativePath).
+          new CGD.Dependency(relativePath, tags[i].type).
             withCanonicalPath(fullPath).
             register(this.files).
             loaded();
