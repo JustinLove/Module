@@ -56,7 +56,7 @@ test("Can construct a dependency with a full path", function() {
 test("registers itself", function() {
   var files = {};
   var x = new CGD.Dependency('x').register(files);
-  equals(files[x.identifier], x, 'path is registered');
+  equals(files[x.identifier], x, 'identifier is registered');
   equals(files[x.canonicalPath], x, 'canonicalPath is registered');
 });
 
