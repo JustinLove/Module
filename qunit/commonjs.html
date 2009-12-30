@@ -50,8 +50,8 @@ test("In a module, there is a free variable called 'exports'.", function() {
 
 module("Module Identifiers");
 
-var absolute = "subdir/subchild"; // this will never work (or rarely)
-var relative = "subpass";
+var absolute = "subdir/subchild";
+var relative = "./subpass";
 
 test("A module identifier is a String of 'terms' delimited by forward slashes.", function() {
   ok(absolute.split('/').length > 1);
@@ -66,7 +66,8 @@ test("Module identifiers may not have file-name extensions like '.js'.", functio
 });
 
 test("A module identifier is 'relative' if the first term is '.' or '..'.", function() {
-  equals(CGD.mod.require.relative(relative), true);
+  equals(CGD.Dependency.relative(relative), true);
+  equals(CGD.Dependency.relative(absolute), false);
 });
 
 test("Top-level identifiers are resolved off the conceptual module name space root.", function() {

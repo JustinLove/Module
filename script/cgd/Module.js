@@ -118,6 +118,10 @@ CGD.god = window;
       'text/css': '.css'
     }[type];
   };
+  CGD.Dependency.relative = function(path) {
+    var first = path.split('/')[0];
+    return first == '.' || first == '..';
+  };
 
   CGD.Module = function(identifier, f) {
     var path = CGD.Module.pathTo(identifier);
