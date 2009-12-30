@@ -119,8 +119,9 @@ CGD.god = window;
     }[type];
   };
 
-  CGD.Module = function(filename, f) {
-    var path = CGD.Module.pathTo(filename);
+  CGD.Module = function(identifier, f) {
+    var path = CGD.Module.pathTo(identifier);
+    var filename = new CGD.Dependency(identifier).canonicalPath;
     var fullPath = CGD.html.findMe('script', 'src', filename);
     this.queued = 0;
     if (fullPath) {
@@ -131,7 +132,7 @@ CGD.god = window;
     if (this.queued > 0) {
       this.files[fullPath] && this.files[fullPath].aborted();
       var m = this;
-      setTimeout(function() {m.require(filename.slice(path.length));}, 0);
+      setTimeout(function() {m.require(identifier.slice(path.length));}, 0);
       throw new CGD.Module.DependenciesNotYetLoaded;
     }
   };

@@ -1,1 +1,1 @@
-ok(true, "file included");
+ok(true, "pass file included");
