@@ -50,8 +50,8 @@ test("In a module, there is a free variable called 'exports'.", function() {
 
 module("Module Identifiers");
 
-var absolute = "subdir/subpass"; // this will never work (or rarely)
-var relative = "subchild";
+var absolute = "subdir/subchild"; // this will never work (or rarely)
+var relative = "subpass";
 
 test("A module identifier is a String of 'terms' delimited by forward slashes.", function() {
   ok(absolute.split('/').length > 1);
@@ -84,7 +84,7 @@ test("Relative identifiers are resolved relative to the identifier of the module
   expect(1);
   stop();
   try {
-    new CGD.Module("subdir/submod", function(mod) {
+    new CGD.Module("subdir/subchild", function(mod) {
       mod.require(relative);
     });
   } catch (e) {}
