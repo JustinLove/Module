@@ -72,18 +72,22 @@ test("A module identifier is 'relative' if the first term is '.' or '..'.", func
 test("Top-level identifiers are resolved off the conceptual module name space root.", function() {
   expect(1);
   stop();
-  new CGD.Module("subdir/submod", function(mod) {
-    mod.require(absolute);
-  });
+  try {
+    new CGD.Module("subdir/submod", function(mod) {
+      mod.require(absolute);
+    });
+  } catch (e) {}
   setTimeout(start, CGD.test.timeout);
 });
 
 test("Relative identifiers are resolved relative to the identifier of the module in which 'require' is written and called.", function() {
   expect(1);
   stop();
-  new CGD.Module("subdir/submod", function(mod) {
-    mod.require(relative);
-  });
+  try {
+    new CGD.Module("subdir/submod", function(mod) {
+      mod.require(relative);
+    });
+  } catch (e) {}
   setTimeout(start, CGD.test.timeout);
 });
 
