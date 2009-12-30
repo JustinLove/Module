@@ -226,7 +226,7 @@ CGD.god = window;
     }
   };
 
-  CGD.mod = new CGD.Module('Module.js', function(m){
+  CGD.mod = new CGD.Module('Module', function(m){
     m.root = CGD.Module.pathTo(window.location.toString());
     m.alreadyNamed('script', 'src');
     m.alreadyNamed('link', 'href');

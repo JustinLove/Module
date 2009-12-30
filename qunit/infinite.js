@@ -4,6 +4,6 @@ if (CGD.test.infinite > 30) {
   ok(false, "at least 30 reloads");
   throw "fail";
 }
-new CGD.Module('infinite.js', function(m) {
-  m.require('nonexistent.js');
+new CGD.Module('infinite', function(m) {
+  m.require('nonexistent');
 });

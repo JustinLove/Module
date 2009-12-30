@@ -1,4 +1,4 @@
-new CGD.Module('codeafter.js', function(m) {
+new CGD.Module('codeafter', function(m) {
   
 });
 

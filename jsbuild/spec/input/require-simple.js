@@ -1,3 +1,3 @@
-new CGD.Module('require-simple.js', function(m) {
-  m.require('simple.js');
+new CGD.Module('require-simple', function(m) {
+  m.require('simple');
 });

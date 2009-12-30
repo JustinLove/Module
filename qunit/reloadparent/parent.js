@@ -1,4 +1,4 @@
 CGD.test = CGD.test || {};
-new CGD.Module('reloadparent/parent.js', function(m) {
-  m.require('child.js');
+new CGD.Module('reloadparent/parent', function(m) {
+  m.require('child');
 });

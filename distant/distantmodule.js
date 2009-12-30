@@ -1,7 +1,7 @@
-new CGD.Module('distantmodule.js', function(m) {
-  m.require('distantfile.js');
+new CGD.Module('distantmodule', function(m) {
+  m.require('distantfile');
   m.under('distantsubdir/', function(m) {
-    m.require('distantsubfile.js');
+    m.require('distantsubfile');
   });
 });
 ok(true, "distantmodule included");

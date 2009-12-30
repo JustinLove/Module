@@ -22,11 +22,11 @@ test("In a module, there is a free variable 'require', that is a function.", fun
 });
 
 test("The 'require' function accepts a module identifier", function() {
-  CGD.mod.require('loadme.js');
+  CGD.mod.require('loadme');
 });
 
 test("'require' returns the exported API of the foreign module.", function() {
-  equals(CGD.mod.require('exports.js').pass, true);
+  equals(CGD.mod.require('exports').pass, true);
 });
 
 test("Partial load of dependency cycles", function() {
@@ -50,8 +50,8 @@ test("In a module, there is a free variable called 'exports'.", function() {
 
 module("Module Identifiers");
 
-var absolute = "subdir/subpass.js"; // this will never work (or rarely)
-var relative = "subchild.js";
+var absolute = "subdir/subpass"; // this will never work (or rarely)
+var relative = "subchild";
 
 test("A module identifier is a String of 'terms' delimited by forward slashes.", function() {
   ok(absolute.split('/').length > 1);
@@ -72,7 +72,7 @@ test("A module identifier is 'relative' if the first term is '.' or '..'.", func
 test("Top-level identifiers are resolved off the conceptual module name space root.", function() {
   expect(1);
   stop();
-  new CGD.Module("subdir/submod.js", function(mod) {
+  new CGD.Module("subdir/submod", function(mod) {
     m.require(absolute);
   });
   setTimeout(start, CGD.test.timeout);
@@ -81,7 +81,7 @@ test("Top-level identifiers are resolved off the conceptual module name space ro
 test("Relative identifiers are resolved relative to the identifier of the module in which 'require' is written and called.", function() {
   expect(1);
   stop();
-  new CGD.Module("subdir/submod.js", function(mod) {
+  new CGD.Module("subdir/submod", function(mod) {
     m.require(relative);
   });
   setTimeout(start, CGD.test.timeout);

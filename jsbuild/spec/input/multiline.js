@@ -1,3 +1,3 @@
-new CGD.Module('multiline.js', function(m) {
+new CGD.Module('multiline', function(m) {
   
 });
