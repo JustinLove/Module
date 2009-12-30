@@ -46,8 +46,8 @@ CGD.god = window;
 
   CGD.Dependency = function(path, type) {
     this.path = path;
-    this.canonicalPath = path;
     this.type = type || 'text/javascript';
+    this.canonicalPath = path + CGD.Dependency.guessFileExtension(this.type);
     this.load = {status: 'new'};
   };
 
@@ -108,11 +108,11 @@ CGD.god = window;
     }
   };
 
-  CGD.Dependency.guessFileType = function(path) {
+  CGD.Dependency.guessFileExtension = function(type) {
     return {
-      'js': 'text/javascript',
-      'css': 'text/css'
-    }[path.match(/\.(\w*)$/)[1]];
+      'text/javascript': '.js',
+      'text/css': '.css'
+    }[type];
   };
 
   CGD.Module = function(filename, f) {
