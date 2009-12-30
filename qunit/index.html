@@ -78,9 +78,9 @@ test("defaults to script type", function() {
   equals(new CGD.Dependency('blarg').type, 'text/javascript');
 });
 
-test("infer file type", function() {
-  equals(new CGD.Dependency('type.js').type, 'text/javascript');
-  equals(new CGD.Dependency('type.css').type, 'text/css');
+test("infer file extension", function() {
+  equals(new CGD.Dependency('type', 'text/javascript').canonicalPath.match(/\.(\w*)$/)[1], 'js');
+  equals(new CGD.Dependency('type', 'text/css').canonicalPath.match(/\.(\w*)$/)[1], 'css');
 });
 
 test("makes matching element", function() {
