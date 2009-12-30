@@ -140,7 +140,7 @@ test("detects static script files", function() {
 
 test("has the proper type for static script files", function() {
   for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].canonicalPath.match(/qunit/)) {
+    if (CGD.mod.files[i].canonicalPath.match(/qunit\/qunit/)) {
       equals(CGD.mod.files[i].type, 'text/javascript');
       return;
     }
@@ -164,6 +164,10 @@ test("has the proper type for static style files", function() {
       return;
     }
   }
+});
+
+test("registers static files under identifier", function() {
+  ok(CGD.mod.files['qunit/qunit'], 'qunit/qunit is registered');
 });
 
 test("fileFromIdentifier gets proper file type", function() {
