@@ -73,7 +73,7 @@ test("Top-level identifiers are resolved off the conceptual module name space ro
   expect(1);
   stop();
   new CGD.Module("subdir/submod", function(mod) {
-    m.require(absolute);
+    mod.require(absolute);
   });
   setTimeout(start, CGD.test.timeout);
 });
@@ -82,7 +82,7 @@ test("Relative identifiers are resolved relative to the identifier of the module
   expect(1);
   stop();
   new CGD.Module("subdir/submod", function(mod) {
-    m.require(relative);
+    mod.require(relative);
   });
   setTimeout(start, CGD.test.timeout);
 });
