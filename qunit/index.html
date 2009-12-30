@@ -17,6 +17,10 @@
 CGD.test = CGD.test || {};
 CGD.test.timeout = isLocal ? 100 : 500;
 
+function extension(path) {
+  return (path.match(/\.(\w*)$/) || [])[1];
+}
+
 module("html");
 
 test("makes elements", function() {
@@ -79,8 +83,8 @@ test("defaults to script type", function() {
 });
 
 test("infer file extension", function() {
-  equals(new CGD.Dependency('type', 'text/javascript').canonicalPath.match(/\.(\w*)$/)[1], 'js');
-  equals(new CGD.Dependency('type', 'text/css').canonicalPath.match(/\.(\w*)$/)[1], 'css');
+  equals(extension(new CGD.Dependency('type', 'text/javascript').canonicalPath), 'js');
+  equals(extension(new CGD.Dependency('type', 'text/css').canonicalPath), 'css');
 });
 
 test("makes matching element", function() {
@@ -98,14 +102,6 @@ test("improves canonicalPath", function() {
   file = new CGD.Dependency('subdir/../el');
   file.element();
   ok(file.canonicalPath.match('qunit/el'), file.canonicalPath);
-});
-
-test("require avoids aliasing", function() {
-  expect(1);
-  stop();
-  CGD.mod.require('alias');
-  CGD.mod.require('subdir/../alias');
-  setTimeout(start, CGD.test.timeout);
 });
 
 module("Module");
@@ -174,10 +170,22 @@ test("fileFromPath gets proper file type", function() {
   equals(CGD.mod.fileFromPath('blarg', 'text/css').file.type, 'text/css');
 });
 
+test("fileFromPath gets a file with proper extension", function() {
+  equals(extension(CGD.mod.fileFromPath('blarg', 'text/css').file.canonicalPath), 'css');
+});
+
 test("require includes a file only once", function() {
   expect(0);
   stop();
   CGD.mod.require('fail');
+  setTimeout(start, CGD.test.timeout);
+});
+
+test("require avoids aliasing", function() {
+  expect(1);
+  stop();
+  CGD.mod.require('alias');
+  CGD.mod.require('subdir/../alias');
   setTimeout(start, CGD.test.timeout);
 });
 
