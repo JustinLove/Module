@@ -170,6 +170,10 @@ test("registers static files under identifier", function() {
   ok(CGD.mod.files['qunit/qunit'], 'qunit/qunit is registered');
 });
 
+test("identifier conflicts resolve to js file", function() {
+  equals(CGD.mod.files['qunit/qunit'].type, 'text/javascript');
+});
+
 test("fileFromIdentifier gets proper file type", function() {
   equals(CGD.mod.fileFromIdentifier('blarg', 'text/css').file.type, 'text/css');
 });
