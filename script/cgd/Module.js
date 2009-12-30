@@ -156,11 +156,11 @@ CGD.god = window;
       F.prototype = this;
       return new F();
     },
-    include: function(filename, type) {
-      new CGD.Dependency(filename).include(type);
+    include: function(identifier, type) {
+      new CGD.Dependency(identifier, type).include(type);
     },
-    require: function(filename, type) {
-      var x = this.fileFromPath(this.path + filename);
+    require: function(identifier, type) {
+      var x = this.fileFromPath(this.path + identifier);
       switch (x.file.status()) {
         case 'new':
         case 'aborted':
@@ -202,10 +202,10 @@ CGD.god = window;
     }
   };
 
-  CGD.Module.pathTo = function(filename) {
-    var slash = filename.lastIndexOf('/');
+  CGD.Module.pathTo = function(identifier) {
+    var slash = identifier.lastIndexOf('/');
     if (slash >= 1) {
-      return filename.slice(0, slash+1);
+      return identifier.slice(0, slash+1);
     } else {
       return '';
     }
