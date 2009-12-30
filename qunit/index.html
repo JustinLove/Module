@@ -130,7 +130,7 @@ test("includes a file twice", function() {
 
 test("detects static script files", function() {
   for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].canonicalPath.match(/qunit/)) {
+    if (CGD.mod.files[i].canonicalPath.match(/qunit.js/)) {
       ok(true, 'found static file');
       return;
     }
@@ -140,7 +140,7 @@ test("detects static script files", function() {
 
 test("has the proper type for static script files", function() {
   for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].canonicalPath.match(/qunit\/qunit/)) {
+    if (CGD.mod.files[i].canonicalPath.match(/qunit.js/)) {
       equals(CGD.mod.files[i].type, 'text/javascript');
       return;
     }
