@@ -57,6 +57,10 @@ CGD.god = window;
       this.canonicalPath = fullPath;
       return this;
     },
+    under: function(root) {
+      this.canonicalPath = root + this.canonicalPath;
+      return this;
+    },
     register: function(files) {
       files[this.path] = this;
       files[this.canonicalPath] = this;
@@ -177,7 +181,7 @@ CGD.god = window;
     },
     fileFromPath: function(path, type) {
       var file = this.files[path] ||
-        new CGD.Dependency(path, type).canonically(this.root + path);
+        new CGD.Dependency(path, type).under(this.root);
       var element = file.element(type);
       file = this.files[file.canonicalPath] || file;
       return {file: file, element: element};
