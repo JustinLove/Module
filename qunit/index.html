@@ -166,12 +166,12 @@ test("has the proper type for static style files", function() {
   }
 });
 
-test("fileFromPath gets proper file type", function() {
-  equals(CGD.mod.fileFromPath('blarg', 'text/css').file.type, 'text/css');
+test("fileFromIdentifier gets proper file type", function() {
+  equals(CGD.mod.fileFromIdentifier('blarg', 'text/css').file.type, 'text/css');
 });
 
-test("fileFromPath gets a file with proper extension", function() {
-  equals(extension(CGD.mod.fileFromPath('blarg', 'text/css').file.canonicalPath), 'css');
+test("fileFromIdentifier gets a file with proper extension", function() {
+  equals(extension(CGD.mod.fileFromIdentifier('blarg', 'text/css').file.canonicalPath), 'css');
 });
 
 test("require includes a file only once", function() {
@@ -263,8 +263,8 @@ test("handles base directory module", function() {
 test("loaded files are known", function() {
   CGD.mod.require('loadme');
   
-  ok(CGD.mod.fileFromPath('loadme').file);
-  ok(CGD.mod.fileFromPath('loadme').element);
+  ok(CGD.mod.fileFromIdentifier('loadme').file);
+  ok(CGD.mod.fileFromIdentifier('loadme').element);
 });
 
 test("file state changes from unloaded to loaded", function() {

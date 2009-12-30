@@ -160,7 +160,7 @@ CGD.god = window;
       new CGD.Dependency(identifier, type).include(type);
     },
     require: function(identifier, type) {
-      var x = this.fileFromPath(this.path + identifier);
+      var x = this.fileFromIdentifier(this.path + identifier);
       switch (x.file.status()) {
         case 'new':
         case 'aborted':
@@ -180,9 +180,9 @@ CGD.god = window;
         default: throw "unknown file status"; break;
       }
     },
-    fileFromPath: function(path, type) {
-      var file = this.files[path] ||
-        new CGD.Dependency(path, type).under(this.root);
+    fileFromIdentifier: function(identifier, type) {
+      var file = this.files[identifier] ||
+        new CGD.Dependency(identifier, type).under(this.root);
       var element = file.element(type);
       file = this.files[file.canonicalPath] || file;
       return {file: file, element: element};
