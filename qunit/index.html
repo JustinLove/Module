@@ -39,9 +39,9 @@ test("Can construct a dependency", function() {
   ok(new CGD.Dependency('pass'));
 });
 
-test("has path property", function()
+test("has identifier property", function()
 {
-  ok(new CGD.Dependency('pass').path);
+  ok(new CGD.Dependency('pass').identifier);
 });
 
 test("has canonicalPath property", function()
@@ -56,7 +56,7 @@ test("Can construct a dependency with a full path", function() {
 test("registers itself", function() {
   var files = {};
   var x = new CGD.Dependency('x').register(files);
-  equals(files[x.path], x, 'path is registered');
+  equals(files[x.identifier], x, 'path is registered');
   equals(files[x.canonicalPath], x, 'canonicalPath is registered');
 });
 

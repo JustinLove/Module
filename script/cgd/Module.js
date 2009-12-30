@@ -44,10 +44,10 @@ CGD.god = window;
     }
   };
 
-  CGD.Dependency = function(path, type) {
-    this.path = path;
+  CGD.Dependency = function(identifier, type) {
+    this.identifier = identifier;
     this.type = type || 'text/javascript';
-    this.canonicalPath = path + CGD.Dependency.guessFileExtension(this.type);
+    this.canonicalPath = identifier + CGD.Dependency.guessFileExtension(this.type);
     this.load = {status: 'new'};
   };
 
@@ -62,7 +62,7 @@ CGD.god = window;
       return this;
     },
     register: function(files) {
-      files[this.path] = this;
+      files[this.identifier] = this;
       files[this.canonicalPath] = this;
       return this;
     },
