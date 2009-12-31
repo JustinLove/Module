@@ -141,7 +141,7 @@ CGD.god = window;
       file.aborted();
       var m = this;
       setTimeout(function() {m.require(identifier);}, 0);
-      throw new CGD.Module.DependenciesNotYetLoaded;
+      throw new CGD.Module.DependenciesNotYetLoaded(identifier);
     }
   };
 
@@ -225,20 +225,27 @@ CGD.god = window;
     }
   };
 
-  CGD.Module.DependenciesNotYetLoaded = function() {};
-  var dnyl = CGD.Module.DependenciesNotYetLoaded.prototype;
-  dnyl.name = "DependenciesNotYetLoaded";
-  dnyl.message = "Not all dependencies loaded; file will be retried later.";
-  dnyl.toString = function() {return this.name + ": " + this.message;};
+  CGD.Module.Exception = function(name, message) {
+    var ex = function(filename) {
+      if (filename) {this.message = filename + ': ' + this.message;}
+    }.prototype;
+    ex.name = name;
+    ex.message = message;
+    ex.toString = CGD.Module.Exception.prototype.toString;
+    return CGD.Module[name] = ex.constructor;
+  };
+  CGD.Module.Exception.prototype.toString = function() {
+    return this.name + ": " + this.message;
+  };
 
-  CGD.Module.UnmetDependency = function(filename) {this.message = filename + " could not be loaded";};
-  var unmet = CGD.Module.UnmetDependency.prototype;
-  unmet.name = "UnmetDependency";
-  unmet.toString = function() {return this.name + ": " + this.message;};
+  new CGD.Module.Exception('DependenciesNotYetLoaded',
+    "Not all dependencies loaded; file will be retried later.");
+  new CGD.Module.Exception('UnmetDependency',
+    "Could not be loaded.");
 
   var window_onerror = window.onerror || function() {return false;};
   window.onerror = CGD.Module.onerror = function(message, url, line)  {
-    if (message.match(dnyl.name)) {
+    if (message.match('DependenciesNotYetLoaded')) {
       return true;
     } else {
       return window_onerror(message, url, line);
