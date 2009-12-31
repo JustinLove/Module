@@ -136,7 +136,7 @@ CGD.god = window;
     if (this.queued > 0) {
       this.files[fullPath] && this.files[fullPath].aborted();
       var m = this;
-      setTimeout(function() {m.require(identifier.slice(path.length));}, 0);
+      setTimeout(function() {m.require(identifier);}, 0);
       throw new CGD.Module.DependenciesNotYetLoaded;
     }
   };
@@ -161,10 +161,10 @@ CGD.god = window;
       return new F();
     },
     include: function(identifier, type) {
-      new CGD.Dependency(identifier, type).include(type);
+      new CGD.Dependency(this.absoluteIdentifier(identifier), type).include(type);
     },
     require: function(identifier, type) {
-      var x = this.fileFromIdentifier(this.path + identifier);
+      var x = this.fileFromIdentifier(this.absoluteIdentifier(identifier));
       switch (x.file.status()) {
         case 'new':
         case 'aborted':
@@ -190,6 +190,13 @@ CGD.god = window;
       var element = file.element(type);
       file = this.files[file.canonicalPath] || file;
       return {file: file, element: element};
+    },
+    absoluteIdentifier: function(identifier) {
+      if (CGD.Dependency.relative(identifier)) {
+        return this.path + identifier;
+      } else {
+        return identifier;
+      }
     },
     alreadyNamed: function(tag, attr) {
       var tags = document.getElementsByTagName(tag);

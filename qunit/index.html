@@ -215,7 +215,7 @@ test("relative path context doesn't double queued count", function() {
       equals(mod.queued, 1);
       mod.under('subdir/', function(m) {
         equals(m.queued, 0);
-        m.require('dummysubchild');
+        m.require('./dummysubchild');
         equals(m.queued, 1);
       });
       equals(mod.queued, 2);
