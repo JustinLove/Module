@@ -25,12 +25,12 @@ test("The 'require' function accepts a module identifier", function() {
   CGD.mod.require('loadme');
 });
 
-test("'require' returns the exported API of the foreign module.", function() {
-  CGD.mod.require('exports');
-  expect(1);
+test("'require' returns the exported API of the foreign module. [the second time]", function() {
+  expect(2);
+  equals(CGD.mod.require('exports'), null, "the first time it fails");
   stop();
   setTimeout(function() {
-    equals(CGD.mod.require('exports').pass, true);
+    equals(CGD.mod.require('exports').pass, true, "the second time it succeeds");
     start();
   }, CGD.test.timeout);
 });
