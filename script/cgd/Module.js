@@ -197,12 +197,14 @@ CGD.god = window;
         var fullPath = tags[i][attr];
         if (fullPath.indexOf(this.root) == 0) {
           var relativePath = fullPath.substr(this.root.length);
-          var identifier = relativePath.replace(/\.(\w*)$/, '');
-          new CGD.Dependency(identifier, tags[i].type).
-            canonically(fullPath).
-            register(this.files).
-            loaded();
+        } else {
+          var relativePath = fullPath;
         }
+        var identifier = relativePath.replace(/\.(\w*)$/, '');
+        new CGD.Dependency(identifier, tags[i].type).
+          canonically(fullPath).
+          register(this.files).
+          loaded();
       }
     }
   };
