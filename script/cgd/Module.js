@@ -184,7 +184,7 @@ CGD.god = window;
           }
           this.queued++;
           break;
-        case 'loaded': break;
+        case 'loaded': return x.file.exports;
         default: throw "unknown file status"; break;
       }
     },

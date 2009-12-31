@@ -26,7 +26,13 @@ test("The 'require' function accepts a module identifier", function() {
 });
 
 test("'require' returns the exported API of the foreign module.", function() {
-  equals(CGD.mod.require('exports').pass, true);
+  CGD.mod.require('exports');
+  expect(1);
+  stop();
+  setTimeout(function() {
+    equals(CGD.mod.require('exports').pass, true);
+    start();
+  }, CGD.test.timeout);
 });
 
 test("Partial load of dependency cycles", function() {
