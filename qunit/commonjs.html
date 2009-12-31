@@ -43,6 +43,7 @@ test("If the requested module cannot be returned, 'require' must throw an error.
 });
 
 test("In a module, there is a free variable called 'exports'.", function() {
+  new CGD.Module('foo', function(m) {});
   equals(typeof(exports), 'object');
 });
 

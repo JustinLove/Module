@@ -49,6 +49,7 @@ CGD.god = window;
     this.type = type || 'text/javascript';
     this.canonicalPath = identifier + CGD.Dependency.guessFileExtension(this.type);
     this.load = {status: 'new'};
+    this.exports = {};
   };
 
   CGD.Dependency.prototype = {
@@ -125,16 +126,19 @@ CGD.god = window;
 
   CGD.Module = function(identifier, f) {
     var path = CGD.Module.pathTo(identifier);
-    var filename = new CGD.Dependency(identifier).canonicalPath;
+    var file = new CGD.Dependency(identifier);
+    var filename = file.canonicalPath;
     var fullPath = CGD.html.findMe('script', 'src', filename);
     this.queued = 0;
     if (fullPath) {
+      file = this.files[fullPath] || this.files[identifier] || file;
       this.root = fullPath.slice(0, -filename.length);
     }
     this.cd(path);
+    window.exports = file.exports;
     f(this);
     if (this.queued > 0) {
-      this.files[fullPath] && this.files[fullPath].aborted();
+      file.aborted();
       var m = this;
       setTimeout(function() {m.require(identifier);}, 0);
       throw new CGD.Module.DependenciesNotYetLoaded;
