@@ -15,6 +15,17 @@
 CGD.test = CGD.test || {};
 CGD.test.timeout = isLocal ? 100 : 500;
 
+function require_catch(identifier, type) {
+  try {
+    return CGD.mod.require(identifier, type);
+  } catch (e) {
+    if (e instanceof CGD.Module.FileNotYetLoaded) {
+      return;
+    }
+    throw e;
+  };
+}
+
 module("Module Context");
 
 test("In a module, there is a free variable 'require', that is a function.", function() {
@@ -22,15 +33,15 @@ test("In a module, there is a free variable 'require', that is a function.", fun
 });
 
 test("The 'require' function accepts a module identifier", function() {
-  CGD.mod.require('loadme');
+  require_catch('loadme');
 });
 
 test("'require' returns the exported API of the foreign module. [the second time]", function() {
   expect(2);
-  equals(CGD.mod.require('exports'), null, "the first time it fails");
+  equals(require_catch('exports'), null, "the first time it fails");
   stop();
   setTimeout(function() {
-    equals(CGD.mod.require('exports').pass, true, "the second time it succeeds");
+    equals(require_catch('exports').pass, true, "the second time it succeeds");
     start();
   }, CGD.test.timeout);
 });

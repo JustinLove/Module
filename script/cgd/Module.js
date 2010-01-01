@@ -136,11 +136,15 @@ CGD.god = window;
     }
     this.cd(path);
     window.exports = file.exports;
-    f(this);
+    try {f(this);} catch (e) {
+      if (e instanceof CGD.Module.UnmetDependency) {
+        throw e;
+      }
+    };
     if (this.queued > 0) {
       file.aborted();
       var m = this;
-      setTimeout(function() {m.require(identifier);}, 0);
+      setTimeout(function() {m.enqueue(identifier);}, 0);
       throw new CGD.Module.DependenciesNotYetLoaded(identifier);
     }
   };
@@ -168,6 +172,14 @@ CGD.god = window;
       new CGD.Dependency(this.absoluteIdentifier(identifier), type).include(type);
     },
     require: function(identifier, type) {
+      var exports = this.enqueue(identifier, type);
+      if (exports) {
+        return exports;
+      } else {
+        throw new CGD.Module.FileNotYetLoaded(identifier);
+      }
+    },
+    enqueue: function(identifier, type) {
       var x = this.fileFromIdentifier(this.absoluteIdentifier(identifier));
       switch (x.file.status()) {
         case 'new':
@@ -240,6 +252,8 @@ CGD.god = window;
 
   new CGD.Module.Exception('DependenciesNotYetLoaded',
     "Not all dependencies loaded; file will be retried later.");
+  new CGD.Module.Exception('FileNotYetLoaded',
+    "File not yet available; try again later.");
   new CGD.Module.Exception('UnmetDependency',
     "Could not be loaded.");
 
