@@ -168,16 +168,14 @@ CGD.god = window;
       F.prototype = this;
       return new F();
     },
+    onNotLoaded: function(identifier) {
+      throw new CGD.Module.FileNotYetLoaded(identifier);
+    },
     include: function(identifier, type) {
       new CGD.Dependency(this.absoluteIdentifier(identifier), type).include(type);
     },
     require: function(identifier, type) {
-      var exports = this.enqueue(identifier, type);
-      if (exports) {
-        return exports;
-      } else {
-        throw new CGD.Module.FileNotYetLoaded(identifier);
-      }
+      return this.enqueue(identifier, type) || this.onNotLoaded(identifier);
     },
     enqueue: function(identifier, type) {
       var x = this.fileFromIdentifier(this.absoluteIdentifier(identifier));
