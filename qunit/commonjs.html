@@ -17,7 +17,7 @@ CGD.test.timeout = isLocal ? 100 : 500;
 
 function require_catch(identifier, type) {
   try {
-    return CGD.mod.require(identifier, type);
+    return require(identifier, type);
   } catch (e) {
     if (e instanceof CGD.Module.FileNotYetLoaded) {
       return;
@@ -53,7 +53,7 @@ test("Partial load of dependency cycles", function() {
 
 test("If the requested module cannot be returned, 'require' must throw an error.", function() {
   try {
-    CGD.mod.require('nothing');
+    require('nothing');
     ok(false, 'no error was thrown');
   } catch(e) {
     ok(true, e);
@@ -94,7 +94,7 @@ test("Top-level identifiers are resolved off the conceptual module name space ro
   stop();
   try {
     new CGD.Module("subdir/submod", function(mod) {
-      mod.require(absolute);
+      require(absolute);
     });
   } catch (e) {}
   setTimeout(start, CGD.test.timeout);
@@ -105,7 +105,7 @@ test("Relative identifiers are resolved relative to the identifier of the module
   stop();
   try {
     new CGD.Module("subdir/subchild", function(mod) {
-      mod.require(relative);
+      require(relative);
     });
   } catch (e) {}
   setTimeout(start, CGD.test.timeout);
