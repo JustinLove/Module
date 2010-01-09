@@ -125,7 +125,6 @@ CGD.god = window;
   };
 
   CGD.Module = function(identifier, f) {
-    var module = this;
     var path = CGD.Module.pathTo(identifier);
     var file = new CGD.Dependency(identifier);
     var filename = file.uri;
@@ -146,6 +145,7 @@ CGD.god = window;
     };
     if (this.queued > 0) {
       file.aborted();
+      var module = this;
       setTimeout(function() {module.enqueue(identifier);}, 0);
       throw new CGD.Module.DependenciesNotYetLoaded(identifier);
     }
