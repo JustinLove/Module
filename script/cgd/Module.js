@@ -125,7 +125,7 @@ CGD.god = window;
   };
 
   CGD.Module = function(identifier, f) {
-    var m = this;
+    var module = this;
     var path = CGD.Module.pathTo(identifier);
     var file = new CGD.Dependency(identifier);
     var filename = file.canonicalPath;
@@ -136,8 +136,10 @@ CGD.god = window;
       this.root = fullPath.slice(0, -filename.length);
     }
     this.cd(path);
+    this.id = file.identifier;
+    this.uri = fullPath;
     window.exports = file.exports;
-    window.require = function(identifier, type) {return m.require(identifier, type);};
+    window.require = function(identifier, type) {return module.require(identifier, type);};
     window.module = this;
     try {f(this);} catch (e) {
       if (e instanceof CGD.Module.UnmetDependency) {
@@ -146,7 +148,7 @@ CGD.god = window;
     };
     if (this.queued > 0) {
       file.aborted();
-      setTimeout(function() {m.enqueue(identifier);}, 0);
+      setTimeout(function() {module.enqueue(identifier);}, 0);
       throw new CGD.Module.DependenciesNotYetLoaded(identifier);
     }
   };

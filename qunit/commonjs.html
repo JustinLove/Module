@@ -124,8 +124,8 @@ test("The 'module' object must have an 'id' property that is the top-level 'id' 
 });
 
 test("The 'module' object may have a 'uri' String that is the fully-qualified URI to the resource from which the module was created.", function() {
-  new CGD.Module("CommonJS");
-  equals(module.uri, window.location.toString().replace('commonjs.html', 'CommonJS.js'));
+  new CGD.Module("qunit/qunit");
+  equals(module.uri, window.location.toString().replace('commonjs.html', 'qunit/qunit.js'));
 });
 
 test("The 'require' function may have a 'main' property that represents the top-level 'module' object of the program.", function() {
