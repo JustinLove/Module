@@ -29,6 +29,7 @@ function require_catch(identifier, type) {
 module("Module Context");
 
 test("In a module, there is a free variable 'require', that is a function.", function() {
+  new CGD.Module('commonjs');
   equals(typeof(require), 'function');
 });
 

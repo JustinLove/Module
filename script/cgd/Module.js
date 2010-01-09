@@ -125,6 +125,7 @@ CGD.god = window;
   };
 
   CGD.Module = function(identifier, f) {
+    var m = this;
     var path = CGD.Module.pathTo(identifier);
     var file = new CGD.Dependency(identifier);
     var filename = file.canonicalPath;
@@ -136,6 +137,7 @@ CGD.god = window;
     }
     this.cd(path);
     window.exports = file.exports;
+    window.require = function(identifier, type) {return m.require(identifier, type);};
     try {f(this);} catch (e) {
       if (e instanceof CGD.Module.UnmetDependency) {
         throw e;
@@ -143,7 +145,6 @@ CGD.god = window;
     };
     if (this.queued > 0) {
       file.aborted();
-      var m = this;
       setTimeout(function() {m.enqueue(identifier);}, 0);
       throw new CGD.Module.DependenciesNotYetLoaded(identifier);
     }
