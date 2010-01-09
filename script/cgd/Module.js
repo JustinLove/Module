@@ -140,6 +140,7 @@ CGD.god = window;
     this.uri = fullPath;
     window.exports = file.exports;
     window.require = function(identifier, type) {return module.require(identifier, type);};
+    window.require.main = this.main;
     window.module = this;
     try {f(this);} catch (e) {
       if (e instanceof CGD.Module.UnmetDependency) {
@@ -268,7 +269,10 @@ CGD.god = window;
     }
   };
 
-  CGD.main = new CGD.Module('Module', function(m){
+  CGD.Module.prototype.require.main =
+  CGD.Module.prototype.main =
+  CGD.main =
+  new CGD.Module('Module', function(m){
     m.root = CGD.Module.pathTo(window.location.toString());
     m.alreadyNamed('link', 'href');
     m.alreadyNamed('script', 'src');
