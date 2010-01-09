@@ -21,7 +21,7 @@ function extension(path) {
   return (path.match(/\.(\w*)$/) || [])[1];
 }
 
-module("html");
+QUnit.module("html");
 
 test("makes elements", function() {
   ok(CGD.html.makeTag('foo', {bar: 'bar'}));
@@ -33,7 +33,7 @@ test("adds an element to head", function() {
 });
 
 
-module("Dependency");
+QUnit.module("Dependency");
 
 test("Can construct a dependency", function() {
   ok(new CGD.Dependency('pass'));
@@ -104,7 +104,7 @@ test("improves canonicalPath", function() {
   ok(file.canonicalPath.match('qunit/el'), file.canonicalPath);
 });
 
-module("Module");
+QUnit.module("Module");
 
 test("construct a module", function() {
   expect(1);

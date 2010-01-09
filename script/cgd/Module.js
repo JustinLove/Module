@@ -138,6 +138,7 @@ CGD.god = window;
     this.cd(path);
     window.exports = file.exports;
     window.require = function(identifier, type) {return m.require(identifier, type);};
+    window.module = this;
     try {f(this);} catch (e) {
       if (e instanceof CGD.Module.UnmetDependency) {
         throw e;
