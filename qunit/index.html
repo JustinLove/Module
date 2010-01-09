@@ -39,25 +39,25 @@ test("Can construct a dependency", function() {
   ok(new CGD.Dependency('pass'));
 });
 
-test("has identifier property", function()
+test("has id property", function()
 {
-  ok(new CGD.Dependency('pass').identifier);
+  ok(new CGD.Dependency('pass').id);
 });
 
-test("has canonicalPath property", function()
+test("has uri property", function()
 {
-  ok(new CGD.Dependency('pass').canonicalPath);
+  ok(new CGD.Dependency('pass').uri);
 });
 
 test("Can construct a dependency with a full path", function() {
-  equals(new CGD.Dependency('pass').canonically('full/pass.js').canonicalPath, 'full/pass.js');
+  equals(new CGD.Dependency('pass').canonically('full/pass.js').uri, 'full/pass.js');
 });
 
 test("registers itself", function() {
   var files = {};
   var x = new CGD.Dependency('x').register(files);
-  equals(files[x.identifier], x, 'identifier is registered');
-  equals(files[x.canonicalPath], x, 'canonicalPath is registered');
+  equals(files[x.id], x, 'id is registered');
+  equals(files[x.uri], x, 'uri is registered');
 });
 
 test("can track whether it's loaded", function() {
@@ -83,8 +83,8 @@ test("defaults to script type", function() {
 });
 
 test("infer file extension", function() {
-  equals(extension(new CGD.Dependency('type', 'text/javascript').canonicalPath), 'js');
-  equals(extension(new CGD.Dependency('type', 'text/css').canonicalPath), 'css');
+  equals(extension(new CGD.Dependency('type', 'text/javascript').uri), 'js');
+  equals(extension(new CGD.Dependency('type', 'text/css').uri), 'css');
 });
 
 test("makes matching element", function() {
@@ -98,10 +98,10 @@ test("includes a file", function() {
   setTimeout(start, CGD.test.timeout);
 });
 
-test("improves canonicalPath", function() {
+test("improves uri", function() {
   file = new CGD.Dependency('subdir/../el');
   file.element();
-  ok(file.canonicalPath.match('qunit/el'), file.canonicalPath);
+  ok(file.uri.match('qunit/el'), file.uri);
 });
 
 QUnit.module("Module");
@@ -130,7 +130,7 @@ test("includes a file twice", function() {
 
 test("detects static script files", function() {
   for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].canonicalPath.match(/qunit.js/)) {
+    if (CGD.mod.files[i].uri.match(/qunit.js/)) {
       ok(true, 'found static file');
       return;
     }
@@ -140,7 +140,7 @@ test("detects static script files", function() {
 
 test("has the proper type for static script files", function() {
   for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].canonicalPath.match(/qunit.js/)) {
+    if (CGD.mod.files[i].uri.match(/qunit.js/)) {
       equals(CGD.mod.files[i].type, 'text/javascript');
       return;
     }
@@ -149,7 +149,7 @@ test("has the proper type for static script files", function() {
 
 test("detects static style files", function() {
   for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].canonicalPath.match(/qunit.css/)) {
+    if (CGD.mod.files[i].uri.match(/qunit.css/)) {
       ok(true, 'found static file');
       return;
     }
@@ -159,7 +159,7 @@ test("detects static style files", function() {
 
 test("has the proper type for static style files", function() {
   for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].canonicalPath.match(/qunit.css/)) {
+    if (CGD.mod.files[i].uri.match(/qunit.css/)) {
       equals(CGD.mod.files[i].type, 'text/css');
       return;
     }
@@ -179,7 +179,7 @@ test("fileFromIdentifier gets proper file type", function() {
 });
 
 test("fileFromIdentifier gets a file with proper extension", function() {
-  equals(extension(CGD.mod.fileFromIdentifier('blarg', 'text/css').file.canonicalPath), 'css');
+  equals(extension(CGD.mod.fileFromIdentifier('blarg', 'text/css').file.uri), 'css');
 });
 
 test("require includes a file only once", function() {

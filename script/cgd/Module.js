@@ -45,9 +45,9 @@ CGD.god = window;
   };
 
   CGD.Dependency = function(identifier, type) {
-    this.identifier = identifier;
+    this.id = identifier;
     this.type = type || 'text/javascript';
-    this.canonicalPath = identifier + CGD.Dependency.guessFileExtension(this.type);
+    this.uri = identifier + CGD.Dependency.guessFileExtension(this.type);
     this.load = {status: 'new'};
     this.exports = {};
   };
@@ -55,16 +55,16 @@ CGD.god = window;
   CGD.Dependency.prototype = {
     constructor: CGD.Dependency,
     canonically: function(fullPath) {
-      this.canonicalPath = fullPath;
+      this.uri = fullPath;
       return this;
     },
     under: function(root) {
-      this.canonicalPath = root + this.canonicalPath;
+      this.uri = root + this.uri;
       return this;
     },
     register: function(files) {
-      files[this.identifier] = this;
-      files[this.canonicalPath] = this;
+      files[this.id] = this;
+      files[this.uri] = this;
       return this;
     },
     status: function() {
@@ -96,13 +96,13 @@ CGD.god = window;
       switch (type) {
         case 'text/javascript':
           var element = CGD.html.makeTag('script',
-            {src: this.canonicalPath, type: type, language: 'javascript'});
-          this.canonicalPath = element.src;
+            {src: this.uri, type: type, language: 'javascript'});
+          this.uri = element.src;
           return element;
         case 'text/css':
           var element = CGD.html.makeTag('link', 
-            {href: this.canonicalPath, type: type, rel: 'stylesheet'});
-          this.canonicalPath = element.href;
+            {href: this.uri, type: type, rel: 'stylesheet'});
+          this.uri = element.href;
           return element;
         default:
           throw "Don't know how to include " + type;
@@ -128,7 +128,7 @@ CGD.god = window;
     var module = this;
     var path = CGD.Module.pathTo(identifier);
     var file = new CGD.Dependency(identifier);
-    var filename = file.canonicalPath;
+    var filename = file.uri;
     var fullPath = CGD.html.findMe('script', 'src', filename);
     this.queued = 0;
     if (fullPath) {
@@ -136,7 +136,7 @@ CGD.god = window;
       this.root = fullPath.slice(0, -filename.length);
     }
     this.cd(path);
-    this.id = file.identifier;
+    this.id = file.id;
     this.uri = fullPath;
     window.exports = file.exports;
     window.require = function(identifier, type) {return module.require(identifier, type);};
@@ -194,7 +194,7 @@ CGD.god = window;
         case 'pending':
           x.file.count = (x.file.count || 0) + 1;
           if (x.file.count > 20) {
-            throw new CGD.Module.UnmetDependency(x.file.canonicalPath);
+            throw new CGD.Module.UnmetDependency(x.file.uri);
           }
           this.queued++;
           return null;
@@ -206,7 +206,7 @@ CGD.god = window;
       var file = this.files[identifier] ||
         new CGD.Dependency(identifier, type).under(this.root);
       var element = file.element(type);
-      file = this.files[file.canonicalPath] || file;
+      file = this.files[file.uri] || file;
       return {file: file, element: element};
     },
     absoluteIdentifier: function(identifier) {
