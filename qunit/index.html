@@ -116,21 +116,21 @@ test("construct a module", function() {
 test("includes a file", function() {
   expect(1);
   stop();
-  CGD.mod.include('pass');
+  CGD.main.include('pass');
   setTimeout(start, CGD.test.timeout);
 });
 
 test("includes a file twice", function() {
   expect(2);
   stop();
-  CGD.mod.include('pass');
-  CGD.mod.include('pass');
+  CGD.main.include('pass');
+  CGD.main.include('pass');
   setTimeout(start, CGD.test.timeout);
 });
 
 test("detects static script files", function() {
-  for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].uri.match(/qunit.js/)) {
+  for (var i in CGD.main.files) {
+    if (CGD.main.files[i].uri.match(/qunit.js/)) {
       ok(true, 'found static file');
       return;
     }
@@ -139,17 +139,17 @@ test("detects static script files", function() {
 });
 
 test("has the proper type for static script files", function() {
-  for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].uri.match(/qunit.js/)) {
-      equals(CGD.mod.files[i].type, 'text/javascript');
+  for (var i in CGD.main.files) {
+    if (CGD.main.files[i].uri.match(/qunit.js/)) {
+      equals(CGD.main.files[i].type, 'text/javascript');
       return;
     }
   }
 });
 
 test("detects static style files", function() {
-  for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].uri.match(/qunit.css/)) {
+  for (var i in CGD.main.files) {
+    if (CGD.main.files[i].uri.match(/qunit.css/)) {
       ok(true, 'found static file');
       return;
     }
@@ -158,42 +158,42 @@ test("detects static style files", function() {
 });
 
 test("has the proper type for static style files", function() {
-  for (var i in CGD.mod.files) {
-    if (CGD.mod.files[i].uri.match(/qunit.css/)) {
-      equals(CGD.mod.files[i].type, 'text/css');
+  for (var i in CGD.main.files) {
+    if (CGD.main.files[i].uri.match(/qunit.css/)) {
+      equals(CGD.main.files[i].type, 'text/css');
       return;
     }
   }
 });
 
 test("registers static files under identifier", function() {
-  ok(CGD.mod.files['qunit/qunit'], 'qunit/qunit is registered');
+  ok(CGD.main.files['qunit/qunit'], 'qunit/qunit is registered');
 });
 
 test("identifier conflicts resolve to js file", function() {
-  equals(CGD.mod.files['qunit/qunit'].type, 'text/javascript');
+  equals(CGD.main.files['qunit/qunit'].type, 'text/javascript');
 });
 
 test("fileFromIdentifier gets proper file type", function() {
-  equals(CGD.mod.fileFromIdentifier('blarg', 'text/css').file.type, 'text/css');
+  equals(CGD.main.fileFromIdentifier('blarg', 'text/css').file.type, 'text/css');
 });
 
 test("fileFromIdentifier gets a file with proper extension", function() {
-  equals(extension(CGD.mod.fileFromIdentifier('blarg', 'text/css').file.uri), 'css');
+  equals(extension(CGD.main.fileFromIdentifier('blarg', 'text/css').file.uri), 'css');
 });
 
 test("require includes a file only once", function() {
   expect(0);
   stop();
-  CGD.mod.require('fail');
+  CGD.main.require('fail');
   setTimeout(start, CGD.test.timeout);
 });
 
 test("require avoids aliasing", function() {
   expect(1);
   stop();
-  CGD.mod.enqueue('alias');
-  CGD.mod.enqueue('subdir/../alias');
+  CGD.main.enqueue('alias');
+  CGD.main.enqueue('subdir/../alias');
   setTimeout(start, CGD.test.timeout);
 });
 
@@ -228,11 +228,11 @@ test("relative path context doesn't double queued count", function() {
 });
 
 test("absolute path context", function() {
-  ok(!CGD.mod.path.match('subdir'), 'subdir not previously in path');
+  ok(!CGD.main.path.match('subdir'), 'subdir not previously in path');
   new CGD.Module('subdir/subpass', function(m) {
     ok(m.path.match('subdir'), 'subdir now in path');
   });
-  ok(!CGD.mod.path.match('subdir'), 'subdir not in path');
+  ok(!CGD.main.path.match('subdir'), 'subdir not in path');
 });
 
 test("doesn't get substrings", function() {
@@ -250,49 +250,49 @@ test("exceptions don't corrupt context", function() {
     });
   }
   catch (s) {}
-  CGD.mod.enqueue("uncorrupted");
+  CGD.main.enqueue("uncorrupted");
   setTimeout(start, CGD.test.timeout);
 });
 
 test("module can load dependencies before continuing", function() {
   expect(1);
   stop();
-  CGD.mod.enqueue('subdir/submod');
+  CGD.main.enqueue('subdir/submod');
   setTimeout(start, CGD.test.timeout);
 });
 
 test("handles base directory module", function() {
   expect(1);
   stop();
-  CGD.mod.enqueue('module');
+  CGD.main.enqueue('module');
   setTimeout(start, CGD.test.timeout);
 });
 
 test("loaded files are known", function() {
-  CGD.mod.enqueue('loadme');
+  CGD.main.enqueue('loadme');
   
-  ok(CGD.mod.fileFromIdentifier('loadme').file);
-  ok(CGD.mod.fileFromIdentifier('loadme').element);
+  ok(CGD.main.fileFromIdentifier('loadme').file);
+  ok(CGD.main.fileFromIdentifier('loadme').element);
 });
 
 test("file state changes from unloaded to loaded", function() {
-  CGD.mod.enqueue('loadme');
+  CGD.main.enqueue('loadme');
   
-  equals(CGD.mod.files['loadme'].status(), 'pending');
+  equals(CGD.main.files['loadme'].status(), 'pending');
   stop();
   setTimeout(function() {
-    equals(CGD.mod.files['loadme'].status(), 'loaded');
+    equals(CGD.main.files['loadme'].status(), 'loaded');
     start();
   }, CGD.test.timeout);
 });
 
 test("canceled load doesn't appear loaded", function() {
-  CGD.mod.enqueue('reloadparent/parent');
+  CGD.main.enqueue('reloadparent/parent');
   
   expect(2);
   stop();
   setTimeout(function() {
-    equals(CGD.mod.files['reloadparent/parent'].status(), 'loaded');
+    equals(CGD.main.files['reloadparent/parent'].status(), 'loaded');
     start();
   }, CGD.test.timeout);
 });
@@ -300,20 +300,20 @@ test("canceled load doesn't appear loaded", function() {
 test("out-of-order mutual dependencies", function() {
   expect(3);
   stop();
-  CGD.mod.enqueue('conflict/top');
+  CGD.main.enqueue('conflict/top');
   setTimeout(start, CGD.test.timeout);
 });
 
 test("distant modules", function() {
   expect(3);
   stop();
-  CGD.mod.enqueue('../distant/distantmodule');
+  CGD.main.enqueue('../distant/distantmodule');
   setTimeout(start, CGD.test.timeout);
 });
 
 test("prevents infinite reload", function() {
   expect(0);
-  CGD.mod.enqueue('infinite');
+  CGD.main.enqueue('infinite');
   stop();
   setTimeout(start, 1000);
 });
