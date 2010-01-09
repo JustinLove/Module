@@ -186,16 +186,16 @@ CGD.god = window;
           x.element.onload = x.element.onreadystatechange = x.file.onloadFactory();
           CGD.html.addElementToHead(x.element);
           this.queued++;
-          break;
+          return null;
         case 'pending':
           x.file.count = (x.file.count || 0) + 1;
           if (x.file.count > 20) {
             throw new CGD.Module.UnmetDependency(x.file.canonicalPath);
           }
           this.queued++;
-          break;
+          return null;
         case 'loaded': return x.file.exports;
-        default: throw "unknown file status"; break;
+        default: throw "unknown file status";
       }
     },
     fileFromIdentifier: function(identifier, type) {
