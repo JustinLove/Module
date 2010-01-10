@@ -137,11 +137,10 @@ CGD.god = window;
   };
 
   CGD.Module = function(identifier, f) {
-    var path = CGD.Module.pathTo(identifier);
     this.file = new CGD.Dependency(identifier).improve(this.files).register(this.files);
     var filename = identifier + CGD.Dependency.guessFileExtension(this.file.type);
     this.root = this.file.uri.slice(0, -filename.length);
-    this.cd(path);
+    this.cd(CGD.Module.pathTo(identifier));
     this.id = this.file.id;
     this.uri = this.file.uri;
     var module = this;
