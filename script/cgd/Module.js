@@ -140,10 +140,7 @@ CGD.god = window;
     var path = CGD.Module.pathTo(identifier);
     this.file = new CGD.Dependency(identifier).improve(this.files).register(this.files);
     var filename = identifier + CGD.Dependency.guessFileExtension(this.file.type);
-    var fullPath = CGD.html.findMe('script', 'src', filename);
-    if (fullPath) {
-      this.root = fullPath.slice(0, -filename.length);
-    }
+    this.root = this.file.uri.slice(0, -filename.length);
     this.cd(path);
     this.id = this.file.id;
     this.uri = this.file.uri;
