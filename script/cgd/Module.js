@@ -62,6 +62,18 @@ CGD.god = window;
       this.uri = root + this.uri;
       return this;
     },
+    improve: function(files) {
+      var x = this;
+      x = files[x.uri] || files[x.id] || x;
+      var fullPath = CGD.html.findMe('script', 'src', x.uri);
+      if (fullPath) {
+        x = files[fullPath] || x.canonically(fullPath);
+      } else {
+        x.element();
+        x = files[x.uri] || x;
+      }
+      return x;
+    },
     register: function(files) {
       files[this.id] = this;
       files[this.uri] = this;
@@ -126,17 +138,15 @@ CGD.god = window;
 
   CGD.Module = function(identifier, f) {
     var path = CGD.Module.pathTo(identifier);
-    this.file = new CGD.Dependency(identifier);
-    var filename = this.file.uri;
+    this.file = new CGD.Dependency(identifier).improve(this.files).register(this.files);
+    var filename = identifier + CGD.Dependency.guessFileExtension(this.file.type);
     var fullPath = CGD.html.findMe('script', 'src', filename);
     if (fullPath) {
-      this.file = this.files[fullPath] || this.files[identifier] || this.file;
       this.root = fullPath.slice(0, -filename.length);
     }
-    this.file.register(this.files);
     this.cd(path);
     this.id = this.file.id;
-    this.uri = fullPath;
+    this.uri = this.file.uri;
     var module = this;
     this.boundRequire = function(identifier, type) {return module.require(identifier, type);};
     this.boundRequire.main = this.main;

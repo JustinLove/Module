@@ -99,9 +99,19 @@ test("includes a file", function() {
 });
 
 test("improves uri", function() {
-  file = new CGD.Dependency('subdir/../el');
+  var file = new CGD.Dependency('subdir/../el');
   file.element();
-  ok(file.uri.match('qunit/el'), file.uri);
+  ok(!file.uri.match(/\.\./));
+});
+
+test("improves uri for non existing script", function() {
+  var file = new CGD.Dependency('subdir/../el').improve({});
+  ok(!file.uri.match(/\.\./));
+});
+
+test("improves uri for existing script", function() {
+  var file = new CGD.Dependency('qunit/../qunit/qunit').improve({});
+  ok(!file.uri.match(/\.\./));
 });
 
 QUnit.module("Module");
