@@ -185,32 +185,29 @@ CGD.god = window;
       return this.enqueue(identifier, type) || this.onNotLoaded(identifier);
     },
     enqueue: function(identifier, type) {
-      var x = this.fileFromIdentifier(this.absoluteIdentifier(identifier));
-      switch (x.file.status()) {
+      var file = this.fileFromIdentifier(this.absoluteIdentifier(identifier), type);
+      switch (file.status()) {
         case 'new':
         case 'aborted':
-          x.file.register(this.files);
-          x.element.onload = x.element.onreadystatechange = x.file.onloadFactory();
-          CGD.html.addElementToHead(x.element);
+          file.register(this.files);
+          var element = file.element();
+          element.onload = element.onreadystatechange = file.onloadFactory();
+          CGD.html.addElementToHead(element);
           this.queued++;
           return null;
         case 'pending':
-          x.file.count = (x.file.count || 0) + 1;
-          if (x.file.count > 20) {
-            throw new CGD.Module.UnmetDependency(x.file.uri);
+          file.count = (file.count || 0) + 1;
+          if (file.count > 20) {
+            throw new CGD.Module.UnmetDependency(file.uri);
           }
           this.queued++;
           return null;
-        case 'loaded': return x.file.exports;
+        case 'loaded': return file.exports;
         default: throw "unknown file status";
       }
     },
     fileFromIdentifier: function(identifier, type) {
-      var file = this.files[identifier] ||
-        new CGD.Dependency(identifier, type).under(this.root);
-      var element = file.element(type);
-      file = this.files[file.uri] || file;
-      return {file: file, element: element};
+      return new CGD.Dependency(identifier, type).under(this.root).improve(this.files);
     },
     absoluteIdentifier: function(identifier) {
       if (CGD.Dependency.relative(identifier)) {
