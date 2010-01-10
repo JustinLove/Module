@@ -137,6 +137,9 @@ CGD.god = window;
     this.cd(path);
     this.id = this.file.id;
     this.uri = fullPath;
+    var module = this;
+    this.boundRequire = function(identifier, type) {return module.require(identifier, type);};
+    this.boundRequire.main = this.main;
     try {f(this);} catch (e) {
       if (e instanceof CGD.Module.UnmetDependency) {
         throw e;
@@ -144,7 +147,6 @@ CGD.god = window;
     };
     if (this.queued > 0) {
       this.file.aborted();
-      var module = this;
       setTimeout(function() {module.enqueue(identifier);}, 0);
       throw new CGD.Module.DependenciesNotYetLoaded(identifier);
     }
@@ -174,10 +176,8 @@ CGD.god = window;
       throw new CGD.Module.FileNotYetLoaded(identifier);
     },
     globals: function(target) {
-      var module = this;
       target.exports = this.file.exports;
-      target.require = function(identifier, type) {return module.require(identifier, type);};
-      target.require.main = this.main;
+      target.require = this.boundRequire;
       target.module = this;
       return this;
     },
