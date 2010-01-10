@@ -290,6 +290,11 @@ test("file state changes from unloaded to loaded", function() {
   }, CGD.test.timeout);
 });
 
+test("backup loaded status", function() {
+  new CGD.Module('void');
+  equals(CGD.main.files['void'].status(), 'loaded');
+});
+
 test("canceled load doesn't appear loaded", function() {
   CGD.main.enqueue('reloadparent/parent');
   

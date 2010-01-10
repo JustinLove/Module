@@ -133,6 +133,7 @@ CGD.god = window;
       this.file = this.files[fullPath] || this.files[identifier] || this.file;
       this.root = fullPath.slice(0, -filename.length);
     }
+    this.file.register(this.files);
     this.cd(path);
     this.id = this.file.id;
     this.uri = fullPath;
@@ -230,6 +231,8 @@ CGD.god = window;
         throw new CGD.Module.DependenciesNotYetLoaded(this.id);
       } else if (retry) {
         setTimeout(function() {module.enqueue(module.id);}, 0);
+      } else {
+        this.file.loaded();
       }
     },
     alreadyNamed: function(tag, attr) {
