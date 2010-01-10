@@ -140,13 +140,15 @@ CGD.god = window;
     var module = this;
     this.boundRequire = function(identifier, type) {return module.require(identifier, type);};
     this.boundRequire.main = this.main;
-    try {
-      f(this, this.boundRequire, this.file.exports);
-    } catch (e) {
-      if (e instanceof CGD.Module.UnmetDependency) {
-        throw e;
+    if (f) {
+      try {
+        f(this, this.boundRequire, this.file.exports);
+      } catch (e) {
+        if (!(e instanceof CGD.Module.FileNotYetLoaded)) {
+          throw e;
+        }
       }
-    };
+    }
     if (this.queued > 0) {
       this.file.aborted();
       setTimeout(function() {module.enqueue(identifier);}, 0);
