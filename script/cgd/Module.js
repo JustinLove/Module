@@ -212,7 +212,7 @@ CGD.god = window;
         return identifier;
       }
     },
-    tryDependencies: function(f) {
+    tryDependencies: function(f, retry) {
       this.queued = 0;
       if (f) {
         try {
@@ -223,11 +223,13 @@ CGD.god = window;
           }
         }
       }
+      var module = this;
       if (this.queued > 0) {
         this.file.aborted();
-        var module = this;
-        setTimeout(function() {module.enqueue(module.id);}, 0);
+        setTimeout(function() {module.tryDependencies(f, true);}, 1);
         throw new CGD.Module.DependenciesNotYetLoaded(this.id);
+      } else if (retry) {
+        setTimeout(function() {module.enqueue(module.id);}, 0);
       }
     },
     alreadyNamed: function(tag, attr) {

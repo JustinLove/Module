@@ -220,12 +220,15 @@ test("relative path context doesn't double queued count", function() {
         equals(m.queued, 1);
       });
       equals(mod.queued, 2);
+      throw "abort";
     });
   } catch(e) {
-    if (!(e instanceof CGD.Module.DependenciesNotYetLoaded)) {
+    if (e != "abort") {
       throw e;
     }
   }
+  stop();
+  setTimeout(start, CGD.test.timeout);
 });
 
 test("absolute path context", function() {
