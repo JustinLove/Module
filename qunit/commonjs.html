@@ -29,7 +29,7 @@ function require_catch(identifier, type) {
 QUnit.module("Module Context");
 
 test("In a module, there is a free variable 'require', that is a function.", function() {
-  new CGD.Module('CommonJS');
+  new CGD.Module('CommonJS').globals(window);
   equals(typeof(require), 'function');
 });
 
@@ -114,18 +114,21 @@ test("Relative identifiers are resolved relative to the identifier of the module
 QUnit.module("Metadata");
 
 test("In a module, there must be a free variable 'module', that is an Object.", function() {
-  new CGD.Module("CommonJS");
-  equals(typeof(module), 'object');
+  var door = {};
+  new CGD.Module("CommonJS").globals(door);
+  equals(typeof(door.module), 'object');
 });
 
 test("The 'module' object must have an 'id' property that is the top-level 'id' of the module.", function() {
-  new CGD.Module("CommonJS");
-  equals(module.id, 'CommonJS');
+  var door = {};
+  new CGD.Module("CommonJS").globals(door);
+  equals(door.module.id, 'CommonJS');
 });
 
 test("The 'module' object may have a 'uri' String that is the fully-qualified URI to the resource from which the module was created.", function() {
-  new CGD.Module("qunit/qunit");
-  equals(module.uri, window.location.toString().replace('commonjs.html', 'qunit/qunit.js'));
+  var door = {};
+  new CGD.Module("qunit/qunit").globals(door);
+  equals(door.module.uri, window.location.toString().replace('commonjs.html', 'qunit/qunit.js'));
 });
 
 test("The 'require' function may have a 'main' property that represents the top-level 'module' object of the program.", function() {

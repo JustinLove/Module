@@ -137,7 +137,6 @@ CGD.god = window;
     this.cd(path);
     this.id = this.file.id;
     this.uri = fullPath;
-    this.globals();
     try {f(this);} catch (e) {
       if (e instanceof CGD.Module.UnmetDependency) {
         throw e;
@@ -174,14 +173,13 @@ CGD.god = window;
       // could be overridden to change behavior.
       throw new CGD.Module.FileNotYetLoaded(identifier);
     },
-    globals: function(targetObject) {
-      // could be overridden to remove behavior.
-      var target = targetObject || window;
+    globals: function(target) {
       var module = this;
       target.exports = this.file.exports;
       target.require = function(identifier, type) {return module.require(identifier, type);};
       target.require.main = this.main;
       target.module = this;
+      return this;
     },
     include: function(identifier, type) {
       new CGD.Dependency(this.absoluteIdentifier(identifier), type).include(type);
