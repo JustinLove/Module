@@ -140,7 +140,7 @@ CGD.god = window;
     var module = this;
     this.boundRequire = function(identifier, type) {return module.require(identifier, type);};
     this.boundRequire.main = this.main;
-    try {f(this);} catch (e) {
+    try {f(this, this.boundRequire, this.file.exports);} catch (e) {
       if (e instanceof CGD.Module.UnmetDependency) {
         throw e;
       }

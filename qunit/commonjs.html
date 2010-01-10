@@ -93,7 +93,7 @@ test("Top-level identifiers are resolved off the conceptual module name space ro
   expect(1);
   stop();
   try {
-    new CGD.Module("subdir/submod", function(mod) {
+    new CGD.Module("subdir/submod", function(module, require, exports) {
       require(absolute);
     });
   } catch (e) {}
@@ -104,7 +104,7 @@ test("Relative identifiers are resolved relative to the identifier of the module
   expect(1);
   stop();
   try {
-    new CGD.Module("subdir/subchild", function(mod) {
+    new CGD.Module("subdir/subchild", function(module, require, exports) {
       require(relative);
     });
   } catch (e) {}
