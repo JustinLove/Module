@@ -126,25 +126,25 @@ CGD.god = window;
 
   CGD.Module = function(identifier, f) {
     var path = CGD.Module.pathTo(identifier);
-    var file = new CGD.Dependency(identifier);
-    var filename = file.uri;
+    this.file = new CGD.Dependency(identifier);
+    var filename = this.file.uri;
     var fullPath = CGD.html.findMe('script', 'src', filename);
     this.queued = 0;
     if (fullPath) {
-      file = this.files[fullPath] || this.files[identifier] || file;
+      this.file = this.files[fullPath] || this.files[identifier] || this.file;
       this.root = fullPath.slice(0, -filename.length);
     }
     this.cd(path);
-    this.id = file.id;
+    this.id = this.file.id;
     this.uri = fullPath;
-    this.globals(file);
+    this.globals();
     try {f(this);} catch (e) {
       if (e instanceof CGD.Module.UnmetDependency) {
         throw e;
       }
     };
     if (this.queued > 0) {
-      file.aborted();
+      this.file.aborted();
       var module = this;
       setTimeout(function() {module.enqueue(identifier);}, 0);
       throw new CGD.Module.DependenciesNotYetLoaded(identifier);
@@ -174,11 +174,11 @@ CGD.god = window;
       // could be overridden to change behavior.
       throw new CGD.Module.FileNotYetLoaded(identifier);
     },
-    globals: function(file, targetObject) {
+    globals: function(targetObject) {
       // could be overridden to remove behavior.
       var target = targetObject || window;
       var module = this;
-      target.exports = file.exports;
+      target.exports = this.file.exports;
       target.require = function(identifier, type) {return module.require(identifier, type);};
       target.require.main = this.main;
       target.module = this;
