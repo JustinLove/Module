@@ -121,7 +121,9 @@ CGD.god = window;
       }
     },
     include: function(type) {
-      CGD.html.addElementToHead(this.element(type));
+      var element = this.element(type);
+      element.onload = element.onreadystatechange = this.onloadFactory();
+      CGD.html.addElementToHead(element);
     }
   };
 
@@ -189,10 +191,7 @@ CGD.god = window;
       switch (file.status()) {
         case 'new':
         case 'aborted':
-          file.register(this.files);
-          var element = file.element();
-          element.onload = element.onreadystatechange = file.onloadFactory();
-          CGD.html.addElementToHead(element);
+          file.register(this.files).include(type);
           this.queued++;
           return null;
         case 'pending':
