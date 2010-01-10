@@ -86,6 +86,10 @@ CGD.god = window;
       this.load.status = 'loaded';
       return this;
     },
+    pending: function() {
+      this.load = {status: 'pending'};
+      return this;
+    },
     aborted: function() {
       this.load = {status: 'aborted'};
       return this;
@@ -228,10 +232,11 @@ CGD.god = window;
       }
       var module = this;
       if (this.queued > 0) {
-        this.file.aborted();
+        this.file.pending();
         setTimeout(function() {module.tryDependencies(f, true);}, 1);
         throw new CGD.Module.DependenciesNotYetLoaded(this.id);
       } else if (retry) {
+        this.file.aborted();
         setTimeout(function() {module.enqueue(module.id);}, 0);
       } else {
         this.file.loaded();
