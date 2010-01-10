@@ -129,7 +129,6 @@ CGD.god = window;
     this.file = new CGD.Dependency(identifier);
     var filename = this.file.uri;
     var fullPath = CGD.html.findMe('script', 'src', filename);
-    this.queued = 0;
     if (fullPath) {
       this.file = this.files[fullPath] || this.files[identifier] || this.file;
       this.root = fullPath.slice(0, -filename.length);
@@ -140,20 +139,7 @@ CGD.god = window;
     var module = this;
     this.boundRequire = function(identifier, type) {return module.require(identifier, type);};
     this.boundRequire.main = this.main;
-    if (f) {
-      try {
-        f(this, this.boundRequire, this.file.exports);
-      } catch (e) {
-        if (!(e instanceof CGD.Module.FileNotYetLoaded)) {
-          throw e;
-        }
-      }
-    }
-    if (this.queued > 0) {
-      this.file.aborted();
-      setTimeout(function() {module.enqueue(identifier);}, 0);
-      throw new CGD.Module.DependenciesNotYetLoaded(identifier);
-    }
+    this.tryDependencies(f);
   };
 
   CGD.Module.prototype = {
@@ -224,6 +210,24 @@ CGD.god = window;
         return this.path + identifier;
       } else {
         return identifier;
+      }
+    },
+    tryDependencies: function(f) {
+      this.queued = 0;
+      if (f) {
+        try {
+          f(this, this.boundRequire, this.file.exports);
+        } catch (e) {
+          if (!(e instanceof CGD.Module.FileNotYetLoaded)) {
+            throw e;
+          }
+        }
+      }
+      if (this.queued > 0) {
+        this.file.aborted();
+        var module = this;
+        setTimeout(function() {module.enqueue(module.id);}, 0);
+        throw new CGD.Module.DependenciesNotYetLoaded(this.id);
       }
     },
     alreadyNamed: function(tag, attr) {
