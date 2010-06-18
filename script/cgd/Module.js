@@ -62,6 +62,18 @@ CGD.god = window;
       this.uri = root + this.uri;
       return this;
     },
+    improve: function(files) {
+      var x = this;
+      x = files[x.uri] || files[x.id] || x;
+      var fullPath = CGD.html.findMe('script', 'src', x.uri);
+      if (fullPath) {
+        x = files[fullPath] || x.canonically(fullPath);
+      } else {
+        x.element();
+        x = files[x.uri] || x;
+      }
+      return x;
+    },
     register: function(files) {
       files[this.id] = this;
       files[this.uri] = this;
@@ -72,6 +84,10 @@ CGD.god = window;
     },
     loaded: function() {
       this.load.status = 'loaded';
+      return this;
+    },
+    pending: function() {
+      this.load = {status: 'pending'};
       return this;
     },
     aborted: function() {
@@ -109,7 +125,9 @@ CGD.god = window;
       }
     },
     include: function(type) {
-      CGD.html.addElementToHead(this.element(type));
+      var element = this.element(type);
+      element.onload = element.onreadystatechange = this.onloadFactory();
+      CGD.html.addElementToHead(element);
     }
   };
 
@@ -125,18 +143,12 @@ CGD.god = window;
   };
 
   CGD.Module = function(identifier, f) {
-    var path = CGD.Module.pathTo(identifier);
-    this.file = new CGD.Dependency(identifier);
-    var filename = this.file.uri;
-    var fullPath = CGD.html.findMe('script', 'src', filename);
-    if (fullPath) {
-      this.file = this.files[fullPath] || this.files[identifier] || this.file;
-      this.root = fullPath.slice(0, -filename.length);
-    }
-    this.file.register(this.files);
-    this.cd(path);
+    this.file = new CGD.Dependency(identifier).improve(this.files).register(this.files);
+    var filename = identifier + CGD.Dependency.guessFileExtension(this.file.type);
+    this.root = this.file.uri.slice(0, -filename.length);
+    this.cd(CGD.Module.pathTo(identifier));
     this.id = this.file.id;
-    this.uri = fullPath;
+    this.uri = this.file.uri;
     var module = this;
     this.boundRequire = function(identifier, type) {return module.require(identifier, type);};
     this.boundRequire.main = this.main;
@@ -179,32 +191,26 @@ CGD.god = window;
       return this.enqueue(identifier, type) || this.onNotLoaded(identifier);
     },
     enqueue: function(identifier, type) {
-      var x = this.fileFromIdentifier(this.absoluteIdentifier(identifier));
-      switch (x.file.status()) {
+      var file = this.fileFromIdentifier(this.absoluteIdentifier(identifier), type);
+      switch (file.status()) {
         case 'new':
         case 'aborted':
-          x.file.register(this.files);
-          x.element.onload = x.element.onreadystatechange = x.file.onloadFactory();
-          CGD.html.addElementToHead(x.element);
+          file.register(this.files).include(type);
           this.queued++;
           return null;
         case 'pending':
-          x.file.count = (x.file.count || 0) + 1;
-          if (x.file.count > 20) {
-            throw new CGD.Module.UnmetDependency(x.file.uri);
+          file.count = (file.count || 0) + 1;
+          if (file.count > 20) {
+            throw new CGD.Module.UnmetDependency(file.uri);
           }
           this.queued++;
           return null;
-        case 'loaded': return x.file.exports;
+        case 'loaded': return file.exports;
         default: throw "unknown file status";
       }
     },
     fileFromIdentifier: function(identifier, type) {
-      var file = this.files[identifier] ||
-        new CGD.Dependency(identifier, type).under(this.root);
-      var element = file.element(type);
-      file = this.files[file.uri] || file;
-      return {file: file, element: element};
+      return new CGD.Dependency(identifier, type).under(this.root).improve(this.files);
     },
     absoluteIdentifier: function(identifier) {
       if (CGD.Dependency.relative(identifier)) {
@@ -226,10 +232,11 @@ CGD.god = window;
       }
       var module = this;
       if (this.queued > 0) {
-        this.file.aborted();
+        this.file.pending();
         setTimeout(function() {module.tryDependencies(f, true);}, 1);
         throw new CGD.Module.DependenciesNotYetLoaded(this.id);
       } else if (retry) {
+        this.file.aborted();
         setTimeout(function() {module.enqueue(module.id);}, 0);
       } else {
         this.file.loaded();

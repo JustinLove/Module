@@ -76,7 +76,7 @@ test("A module identifier is a String of 'terms' delimited by forward slashes.",
   ok(absolute.split('/').length > 1);
 });
 
-test("A term must be a cameCase identifier, '.', or '..'.", function() {
+test("A term must be a camelCase identifier, '.', or '..'.", function() {
   ok(absolute.match(/^[a-zA-Z0-9.\/]+$/));
 });
 

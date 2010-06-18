@@ -99,9 +99,19 @@ test("includes a file", function() {
 });
 
 test("improves uri", function() {
-  file = new CGD.Dependency('subdir/../el');
+  var file = new CGD.Dependency('subdir/../el');
   file.element();
-  ok(file.uri.match('qunit/el'), file.uri);
+  ok(!file.uri.match(/\.\./));
+});
+
+test("improves uri for non existing script", function() {
+  var file = new CGD.Dependency('subdir/../el').improve({});
+  ok(!file.uri.match(/\.\./));
+});
+
+test("improves uri for existing script", function() {
+  var file = new CGD.Dependency('qunit/../qunit/qunit').improve({});
+  ok(!file.uri.match(/\.\./));
 });
 
 QUnit.module("Module");
@@ -175,11 +185,11 @@ test("identifier conflicts resolve to js file", function() {
 });
 
 test("fileFromIdentifier gets proper file type", function() {
-  equals(CGD.main.fileFromIdentifier('blarg', 'text/css').file.type, 'text/css');
+  equals(CGD.main.fileFromIdentifier('blarg', 'text/css').type, 'text/css');
 });
 
 test("fileFromIdentifier gets a file with proper extension", function() {
-  equals(extension(CGD.main.fileFromIdentifier('blarg', 'text/css').file.uri), 'css');
+  equals(extension(CGD.main.fileFromIdentifier('blarg', 'text/css').uri), 'css');
 });
 
 test("require includes a file only once", function() {
@@ -275,8 +285,7 @@ test("handles base directory module", function() {
 test("loaded files are known", function() {
   CGD.main.enqueue('loadme');
   
-  ok(CGD.main.fileFromIdentifier('loadme').file);
-  ok(CGD.main.fileFromIdentifier('loadme').element);
+  ok(CGD.main.fileFromIdentifier('loadme'));
 });
 
 test("file state changes from unloaded to loaded", function() {
