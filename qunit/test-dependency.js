@@ -63,6 +63,17 @@ test("includes a file", function() {
   setTimeout(start, CGD.test.timeout);
 });
 
+test("css files get marked as loaded", function() {
+  expect(1);
+  stop();
+  //new CGD.Dependency('style', 'text/css').include();
+  var style = new CGD.Dependency('style', 'text/css').include();
+  setTimeout(function() {
+    start();
+    equals(style.load.status, 'loaded');
+  }, CGD.test.timeout);
+});
+
 test("improves uri", function() {
   var file = new CGD.Dependency('subdir/../el');
   file.element();

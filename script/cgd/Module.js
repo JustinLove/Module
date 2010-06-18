@@ -124,10 +124,20 @@ CGD.god = window;
           throw "Don't know how to include " + type;
       }
     },
-    include: function(type) {
-      var element = this.element(type);
-      element.onload = element.onreadystatechange = this.onloadFactory();
+    include: function(overrideType) {
+      var element = this.element(overrideType);
+      var type = overrideType || this.type;
+      switch (type) {
+        case 'text/javascript':
+          element.onload = element.onreadystatechange = this.onloadFactory();
+          break;
+        default:
+        case 'text/css':
+          this.loaded();
+          break;
+      }
       CGD.html.addElementToHead(element);
+      return this;
     }
   };
 
