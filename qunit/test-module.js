@@ -125,6 +125,24 @@ test("relative path context doesn't double queued count", function() {
   setTimeout(start, CGD.test.timeout);
 });
 
+test("relative path context keeps count even with exceptions", function() {
+  expect(1);
+  var subject;
+  try {
+    new CGD.Module("noop", function(mod) {
+      subject = mod;
+      mod.under('subdir/', function(m) {
+        m.require('./dummysubchild');
+      });
+    });
+  } catch (e) {
+    if (!(e instanceof CGD.Module.DependenciesNotYetLoaded)) {
+      throw e;
+    }
+  }
+  equals(subject.queued, 1);
+});
+
 test("absolute path context", function() {
   ok(!CGD.main.path.match('subdir'), 'subdir not previously in path');
   new CGD.Module('subdir/subpass', function(m) {

@@ -176,8 +176,11 @@ CGD.god = window;
     under: function(path, f) {
       var m = this.beget();
       m.cd(path);
-      f(m);
-      this.queued += m.queued;
+      try {
+        f(m);
+      } finally {
+        this.queued += m.queued;
+      }
     },
     beget: function() {
       var F = function(){this.queued = 0;};
