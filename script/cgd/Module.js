@@ -162,7 +162,7 @@ CGD.god = window;
     var module = this;
     this.boundRequire = function(identifier, type) {return module.require(identifier, type);};
     this.boundRequire.main = this.main;
-    this.tryDependencies(f);
+    this.firstTry(f);
   };
 
   CGD.Module.prototype = {
@@ -232,7 +232,7 @@ CGD.god = window;
         return identifier;
       }
     },
-    tryDependencies: function(f, retry) {
+    tryDependencies: function(f) {
       this.queued = 0;
       if (f) {
         try {
@@ -243,17 +243,29 @@ CGD.god = window;
           }
         }
       }
+      return this.queued < 1;
+    },
+    firstTry: function(f) {
+      if (this.tryDependencies(f)) {
+        this.file.loaded();
+      } else {
+        this.pending(f);
+      }
+    },
+    reTry: function(f) {
       var module = this;
-      if (this.queued > 0) {
-        this.file.pending();
-        setTimeout(function() {module.tryDependencies(f, true);}, 1);
-        throw new CGD.Module.DependenciesNotYetLoaded(this.id);
-      } else if (retry) {
+      if (this.tryDependencies(f)) {
         this.file.aborted();
         setTimeout(function() {module.enqueue(module.id);}, 0);
       } else {
-        this.file.loaded();
+        this.pending(f);
       }
+    },
+    pending: function(f) {
+      var module = this;
+      this.file.pending();
+      setTimeout(function() {module.reTry(f);}, 1);
+      throw new CGD.Module.DependenciesNotYetLoaded(this.id);
     },
     alreadyNamed: function(tag, attr) {
       var tags = document.getElementsByTagName(tag);
