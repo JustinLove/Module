@@ -312,7 +312,7 @@ CGD.god = window;
 
   var window_onerror = window.onerror || function() {return false;};
   window.onerror = CGD.Module.onerror = function(message, url, line)  {
-    if (message.match('DependenciesNotYetLoaded')) {
+    if (message.match && message.match('DependenciesNotYetLoaded')) {
       return true;
     } else {
       return window_onerror(message, url, line);
