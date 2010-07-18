@@ -136,7 +136,7 @@ test("The 'require' function may have a 'main' property that represents the top-
 });
 
 test("The 'require' function may have a 'paths' attribute.", function() {
-  equals(typeof(require.paths), 'object');
+  equals(typeof(require.paths), 'object', 'not supported');
   equals(require.paths.constructor, Array);
 });
 
