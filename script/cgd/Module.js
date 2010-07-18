@@ -163,7 +163,6 @@ CGD.god = window;
 
   CGD.Module = function(identifier, f) {
     var module = this;
-    this.block = function(m) {f && f(m);};
     this.continuation = function() {module.reTry();};
     this.file = new CGD.Dependency(identifier).improve(this.files).register(this.files);
     var filename = identifier + CGD.Dependency.guessFileExtension(this.file.type);
@@ -175,6 +174,7 @@ CGD.god = window;
     var module = this;
     this.boundRequire = function(identifier, type) {return module.require(identifier, type);};
     this.boundRequire.main = this.main;
+    this.block = function(m) {f && f(m, m.boundRequire, m.file.exports);};
     this.firstTry();
   };
 
