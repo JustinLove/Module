@@ -132,7 +132,7 @@ test("The 'module' object may have a 'uri' String that is the fully-qualified UR
 });
 
 test("The 'require' function may have a 'main' property that represents the top-level 'module' object of the program.", function() {
-  equals(require.main, CGD.main);
+  ok(require.main === CGD.main);
 });
 
 test("The 'require' function may have a 'paths' attribute.", function() {
