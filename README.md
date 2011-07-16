@@ -34,9 +34,9 @@ Most this should be pretty standard.  The two novel features are:
 
 Files should contain a header to express dependancies.  'leaf' modules require no modification.  The header takes the form of "new Module" with the module name  (which must match the file name) and a function which imperitively sets the dependencies.
 
-  new CGD.Module('module', function(m) {
-    m.enqueue('./child');
-  });
+    new CGD.Module('module', function(m) {
+      m.enqueue('./child');
+    });
 
 If the 'child' module is not yet available, script loading will be aborted by raising an exception.  If the browser supports the `onerror` event, this exception will be filtered out before reaching the console.
 
