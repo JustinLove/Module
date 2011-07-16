@@ -14,7 +14,7 @@
 
   <script>
 CGD.test = CGD.test || {};
-CGD.test.timeout = isLocal ? 100 : 500;
+CGD.test.timeout = (isLocal && !navigator.userAgent.match('Opera')) ? 100 : 500;
 
 function extension(path) {
   return (path.match(/\.(\w*)$/) || [])[1];
